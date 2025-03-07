@@ -1,7 +1,7 @@
 const ImageCardReverse = () => {
     return (
         <>
-            <div className="card xl:card-side bg-base-100 shadow-sm lg:mx-4 lg:my-4 lg:w-8/12 xl:bg-gray-100">
+            <div className="card xl:card-side bg-white shadow-sm lg:mx-4 lg:my-4 lg:w-8/12 xl:bg-gray-100">
                 <div className="card-body">
                     <h2 className="card-title lg:text-2xl">Benefits of Volunteering with GoodDeeds</h2>
                     <div className="mb-6">
