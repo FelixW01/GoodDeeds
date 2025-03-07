@@ -1,13 +1,13 @@
 
-function CreateListPage() {
+function Footer() {
 
   return (
     <>
       <div>
-        <h1>Create list</h1>
+        <h1>footer</h1>
       </div>
     </>
   )
 }
 
-export default CreateListPage
+export default Footer
