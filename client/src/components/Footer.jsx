@@ -5,10 +5,10 @@ function Footer() {
   return (
     <footer className="footer footer-horizontal footer-center text-base-content rounded-t p-10 bg-[#5715AE]">
       <nav className="grid grid-flow-col gap-4 text-white">
-        <Link to="/about" className="link link-hover">About us</Link>
-        <Link to="/contact" className="link link-hover">Contact</Link>
-        <Link to="/jobs" className="link link-hover">Listings</Link>
-        <Link to="/press-kit" className="link link-hover">FAQ</Link>
+        <Link to="/" className="link link-hover">About us</Link>
+        <Link to="/" className="link link-hover">Contact</Link>
+        <Link to="/listing" className="link link-hover">Events</Link>
+        <Link to="/" className="link link-hover">FAQ</Link>
       </nav>
       <nav>
         <div className="grid grid-flow-col gap-4 text-white">
@@ -48,7 +48,7 @@ function Footer() {
         </div>
       </nav>
       <aside>
-        <p className="text-white">Copyright © {new Date().getFullYear()} - All right reserved by ACME Industries Ltd</p>
+        <p className="text-white">Copyright © {new Date().getFullYear()} - All right reserved by GoodDeeds Ltd</p>
       </aside>
     </footer>
   )
