@@ -17,7 +17,7 @@ const Hero = () => {
                     </p>
                     <Link to="/listingpage">
                         <button className='btn btn-primary'>
-                        Explore an Opportunity
+                        Explore Opportunities
                         </button>
                     </Link>
                 </div>
