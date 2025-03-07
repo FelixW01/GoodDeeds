@@ -15,9 +15,10 @@ function HomePage() {
             <div className='flex justify-center'>
             <DualImageCard/>
             </div>
-            <div className='flex justify-center'>
+            <div className='flex justify-center mb-10'>
                 <ImageCardReverse/>
             </div>
+            <div className='border-b-2 border-gray-100'></div>
         </>
     )
 }
