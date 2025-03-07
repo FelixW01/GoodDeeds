@@ -17,9 +17,9 @@ function App() {
             <Route index element={<HomePage/>}/>
             <Route path="/dashboard" element={<DashboardPage />}/>
             <Route path="/createlist" element={<CreateListPage />}/>
-            <Route path="/loginpage" element={<LoginPage />}/>
-            <Route path="/signuppage" element={<SignUpPage />}/>
-            <Route path="/listingpage" element={<ListingPage />}/>
+            <Route path="/login" element={<LoginPage />}/>
+            <Route path="/signup" element={<SignUpPage />}/>
+            <Route path="/listing" element={<ListingPage />}/>
             <Route path="*" element={<Error />}/>
           </Route>
       </Routes>
