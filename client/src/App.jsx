@@ -6,24 +6,23 @@ import CreateListPage from './pages/createlistingpage';
 import LoginPage from './pages/loginpage';
 import SignUpPage from './pages/signuppage';
 import ListingPage from './pages/listingpage';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
+import Layout from "./pages/layout.jsx"
 
 function App() {
 
   return (
     <BrowserRouter>
-      <Navbar/>
-        <Routes>
-          <Route path="/" element={<HomePage />}/>
-          <Route path="/dashboard" element={<DashboardPage />}/>
-          <Route path="/createlist" element={<CreateListPage />}/>
-          <Route path="/loginpage" element={<LoginPage />}/>
-          <Route path="/signuppage" element={<SignUpPage />}/>
-          <Route path="/listingpage" element={<ListingPage />}/>
-          <Route path="*" element={<Error />}/>
-        </Routes>
-      <Footer/>
+      <Routes>
+          <Route path="/" element={<Layout/>}>
+            <Route index element={<HomePage/>}/>
+            <Route path="/dashboard" element={<DashboardPage />}/>
+            <Route path="/createlist" element={<CreateListPage />}/>
+            <Route path="/loginpage" element={<LoginPage />}/>
+            <Route path="/signuppage" element={<SignUpPage />}/>
+            <Route path="/listingpage" element={<ListingPage />}/>
+            <Route path="*" element={<Error />}/>
+          </Route>
+      </Routes>
     </BrowserRouter>
   )
 }
