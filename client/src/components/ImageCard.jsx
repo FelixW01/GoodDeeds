@@ -3,7 +3,7 @@ const ImageCard = () => {
         <>
             <div className="card xl:card-side bg-base-100 shadow-sm lg:mx-4 lg:my-4 lg:w-8/12 bg-gray-100">
                     <img
-                        src="/img/volunteer1.png"
+                        src="/img/volunteerOne.png"
                         alt="Album"/>
                 <div className="card-body">
                     <h2 className="card-title">What is GoodDeeds?</h2>
