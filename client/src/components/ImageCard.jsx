@@ -7,7 +7,7 @@ const ImageCard = () => {
                         alt="Album"/>
                 <div className="card-body">
                     <h2 className="card-title">What is GoodDeeds?</h2>
-                    <p>GoodDeeds is a volunteer opportunity platform that connects individuals with organizations and
+                    <p> GoodDeeds is a volunteer opportunity platform that connects individuals with organizations and
                         causes they care about. Our mission is to make volunteering easy, accessible, and rewarding for
                         everyone. We believe that volunteering is a powerful way to build stronger, more connected
                         communities, and we're committed to providing a platform that makes it easy for people to get
