@@ -1,14 +1,14 @@
 const ImageCard = () => {
     return (
         <>
-            <div className="card xl:card-side bg-base-100 shadow-sm lg:mx-4 lg:my-4 lg:w-8/12 bg-gray-100">
+            <div className="card xl:card-side bg-base-100 shadow-sm lg:mx-4 lg:my-4 lg:w-8/12 xl:bg-gray-100">
                 <img
                     src="/img/volunteer1.png"
                     alt="Album"
                     className='xl:rounded-l-lg rounded-t-lg'/>
                 <div className="card-body">
-                    <h2 className="card-title">What is GoodDeeds?</h2>
-                    <p> GoodDeeds is a volunteer opportunity platform that connects individuals with organizations and
+                    <h2 className="card-title lg:text-2xl">What is GoodDeeds?</h2>
+                    <p className='lg:text-lg'> GoodDeeds is a volunteer opportunity platform that connects individuals with organizations and
                         causes they care about. Our mission is to make volunteering easy, accessible, and rewarding for
                         everyone. We believe that volunteering is a powerful way to build stronger, more connected
                         communities, and we're committed to providing a platform that makes it easy for people to get

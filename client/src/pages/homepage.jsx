@@ -2,6 +2,7 @@ import Hero from "../components/Hero";
 import ImageCard from "../components/ImageCard.jsx";
 import ImageCardReverse from "../components/ImageCardReverse.jsx";
 import DualImageCard from "../components/DualImageCard.jsx";
+import DualInfoCard from "../components/DualInfoCard.jsx";
 
 function HomePage() {
 
@@ -15,10 +16,11 @@ function HomePage() {
             <div className='flex justify-center'>
             <DualImageCard/>
             </div>
-            <div className='flex justify-center mb-10'>
+            <div className='flex justify-center mb-0 lg:mb-10'>
                 <ImageCardReverse/>
             </div>
             <div className='border-b-2 border-gray-100'></div>
+            <DualInfoCard/>
         </>
     )
 }

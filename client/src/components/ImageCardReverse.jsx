@@ -1,13 +1,13 @@
 const ImageCardReverse = () => {
     return (
         <>
-            <div className="card xl:card-side bg-base-100 shadow-sm lg:mx-4 lg:my-4 lg:w-8/12 bg-gray-100">
+            <div className="card xl:card-side bg-base-100 shadow-sm lg:mx-4 lg:my-4 lg:w-8/12 xl:bg-gray-100">
                 <div className="card-body">
-                    <h2 className="card-title">Benefits of Volunteering with GoodDeeds</h2>
+                    <h2 className="card-title lg:text-2xl">Benefits of Volunteering with GoodDeeds</h2>
                     <div className="mb-6">
-                        <p>Volunteering with GoodDeeds can have a profound impact on your life and the lives of others.
+                        <p className='lg:text-lg'>Volunteering with GoodDeeds can have a profound impact on your life and the lives of others.
                             Here are just a few of the benefits you can expect:</p>
-                        <div className="list-disc pl-4">
+                        <div className="list-disc pl-4 lg:text-lg">
                             <div className="mb-2">
                                 <li>Gain new skills and experiences that can enhance your career and personal life</li>
                             </div>
