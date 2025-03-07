@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 const dualInfoCard = () => {
     return (
         <>
-            <div className='flex flex-col xl:flex-row justify-center border-b-2 border-gray-100 mb-12'>
+            <div className='flex flex-col xl:flex-row justify-center'>
                 <div className=' w-full h-fit xl:w-4/12 bg-gray-100 xl:rounded-l-lg p-10'>
                     <div className='flex flex-col gap-4 mb-12'>
                         <h2 className='font-bold'>Want to volunteer?</h2>
