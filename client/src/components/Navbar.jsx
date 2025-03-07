@@ -1,11 +1,21 @@
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+
 function Navbar() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   return (
     <>
-        <div className="navbar bg-[#7539C2] shadow-sm">
-            <div className="flex-1">
-                <a className="btn border-none shadow-none bg-[#7539C2] text-xl text-white hover:bg-purple-950">GoodDeeds</a>
-            </div>
+        <div className="navbar bg-[#664395] shadow-sm gap-3 justify-between items-center text-white">
+              <div>
+                <a className="btn border-none shadow-none bg-[#664395] text-xl text-white hover:bg-purple-950"><Link to="/">GoodDeeds</Link></a>
+              </div>
+              <div className="flex gap-4">
+                <button className="border-0 btn btn-ghost transition duration-300 ease-in-out hover:bg-purple-950 hover: text-white hover:shadow-md"><Link to="/listing">Events</Link></button>
+                <button className="border-0 btn btn-ghost transition duration-300 ease-in-out hover:bg-purple-950 hover: text-white hover:shadow-md"><Link to="/signup">For Organizations</Link></button>
+                <button className="border-0 btn btn-ghost transition duration-300 ease-in-out hover:bg-purple-950 hover: text-white hover:shadow-md"><Link to="/signup">For Volunteers</Link></button>
+              </div>
+            {isLoggedIn ?
             <div className="flex gap-2">
                 <div className="dropdown dropdown-end">
                     <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
@@ -28,7 +38,16 @@ function Navbar() {
                         <li><a>Logout</a></li>
                     </ul>
                 </div>
+            </div> :
+            <div className="flex gap-4">
+              <Link to="/login"><button className="btn btn-outline bg-white rounded-xl w-24 text-black transition duration-300 ease-in-out hover:shadow-md">
+                Login
+              </button></Link>
+              <Link to="/signup"><button className="btn btn-active btn-primary bg-black mr-4 rounded-xl w-24 text-white transition duration-300 ease-in-out hover:bg-purple-950 hover:shadow-md">
+                Sign Up
+              </button> </Link>
             </div>
+            }
         </div>
     </>
   )
