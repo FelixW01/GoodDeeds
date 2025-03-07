@@ -6,7 +6,7 @@ function Navbar() {
 
   return (
     <>
-      <div className="navbar bg-base-100 shadow-sm lg:hidden bg-[#664395] text-white">
+      <div className="navbar shadow-sm lg:hidden bg-[#664395] text-white">
         <div className="navbar-start">
             <div className="dropdown">
             <div tabIndex={0} role="button" className="btn btn-ghost btn-circle text-xl transition duration-300 ease-in-out hover:bg-purple-950 hover: text-white hover:shadow-md border-none">
