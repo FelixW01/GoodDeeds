@@ -5,12 +5,12 @@ const DualImageCard = () => {
                 <img
                     src="/img/volunteer2.png"
                     alt="Album"
-                    className='mb-4 xl:mb-0 xl:w-5/12 h-auto'
+                    className='mb-4 xl:mb-0 xl:w-5/12 h-auto rounded-lg'
                 />
                 <img
                     src="/img/volunteer3.png"
                     alt="Album"
-                    className='xl:w-5/12 h-auto'
+                    className='xl:w-5/12 h-auto rounded-lg'
                 />
             </div>
         </>

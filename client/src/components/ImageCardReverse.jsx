@@ -5,7 +5,8 @@ const ImageCardReverse = () => {
                 <div className="card-body">
                     <h2 className="card-title">Benefits of Volunteering with GoodDeeds</h2>
                     <div className="mb-6">
-                        <p>Volunteering with GoodDeeds can have a profound impact on your life and the lives of others. Here are just a few of the benefits you can expect:</p>
+                        <p>Volunteering with GoodDeeds can have a profound impact on your life and the lives of others.
+                            Here are just a few of the benefits you can expect:</p>
                         <div className="list-disc pl-4">
                             <div className="mb-2">
                                 <li>Gain new skills and experiences that can enhance your career and personal life</li>
@@ -14,7 +15,8 @@ const ImageCardReverse = () => {
                                 <li>Meet new people and build meaningful relationships with like-minded individuals</li>
                             </div>
                             <div className="mb-2">
-                                <li>Make a positive impact in your community and contribute to a cause you care about</li>
+                                <li>Make a positive impact in your community and contribute to a cause you care about
+                                </li>
                             </div>
                             <div className="mb-2">
                                 <li>Improve your mental and physical health through the act of volunteering</li>
@@ -27,7 +29,8 @@ const ImageCardReverse = () => {
                 </div>
                 <img
                     src="/img/volunteer4.png"
-                    alt="Album"/>
+                    alt="Album"
+                    className='xl:rounded-r-lg rounded-b-lg'/>
             </div>
         </>
     )

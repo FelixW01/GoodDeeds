@@ -8,7 +8,7 @@ function HomePage() {
     return (
         <>
             <Hero/>
-            <h1 className='font-bold text-3xl text-center mt-10'>Our Story</h1>
+            <h1 className='font-bold text-3xl lg:text-5xl text-center mt-10'>Our Story</h1>
             <div className='flex justify-center mt-10'>
             <ImageCard/>
             </div>
