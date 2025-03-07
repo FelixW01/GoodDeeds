@@ -4,7 +4,7 @@ function LoginPage() {
 
   return (
   <div className="flex flex-col items-center justify-center min-h-[90vh]">
-     <div className="hero bg-base-200 min-h-[70vh] max-w-[80%] bg-[url('/img/volunteer1.png')] bg-cover bg-center backdrop-blur-sm">
+     <div className="hero bg-base-200 min-h-[70vh] max-w-[80%] bg-[url('/img/volunteer-login.png')] bg-cover bg-center backdrop-blur-sm">
       <div className="hero-content flex-col lg:flex-row-reverse">
         <div className="text-center lg:text-left relative z-10">
           <div className="bg-black bg-opacity-55 backdrop-blur-sm p-6 rounded-lg shadow-lg">
