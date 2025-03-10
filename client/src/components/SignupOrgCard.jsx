@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { toast } from 'react-hot-toast';
 
 function SignUpOrgCard() {
   const [formData, setFormData] = useState({
@@ -19,19 +20,35 @@ function SignUpOrgCard() {
       ...formData,
       [e.target.name]: e.target.value,
     });
+    setError(null);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log('Form submitted:', formData);
-    setError(null);
+    
+
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    for (let field of ['email', 'contact_email']) {
+    if (!formData[field]) {
+      setError(`Please input your ${field.replace('_', ' ')}!`);
+      return;
+    }
+    if (!emailPattern.test(formData[field])) {
+      setError(`Invalid ${field.replace('_', ' ')}: ${formData[field]}`);
+      return;
+    }
+  }
 
     try {
       const response = await axios.post('/api/organizations/create', formData);
       console.log('Organization account created:', response.data);
+      toast.success('Account created successfully!')
     } catch (err) {
       console.error('Error creating organization account:', err.response?.data || err.message);
       setError(err.response?.data?.message || 'Something went wrong');
+      toast.error('Error creating user')
     }
   };
 
@@ -76,17 +93,16 @@ function SignUpOrgCard() {
                         onChange={handleChange}
                       />
                       <legend className="fieldset-legend">Email</legend>
-                      <label className=" input validator">
-                        <svg className="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g strokeLinejoin="round" strokeLinecap="round" strokeWidth="2.5" fill="none" stroke="currentColor"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></g></svg>
                         <input
-                        type="email"
-                        name="email"
-                        placeholder="Email@gmail.com"
-                        required
-                        value={formData.email}
-                        onChange={handleChange}
-                      />
-                      </label>
+                          required
+                          type="email"
+                          name="email"
+                          placeholder="Email@example.com"
+                          value={formData.email}
+                          onChange={handleChange}
+                          className={`input ${error ? 'border-error' : formData.email && /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(formData.email) ? 'border-success' : ''}`}
+                        />
+
                       <div className="validator-hint hidden">Enter valid email address</div>
 
                       <legend className="fieldset-legend">Password</legend>
@@ -122,8 +138,6 @@ function SignUpOrgCard() {
                         onChange={handleChange}
                       />
                       <legend className="fieldset-legend">Contact Email</legend>
-                      <label className=" input validator">
-                        <svg className="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g strokeLinejoin="round" strokeLinecap="round" strokeWidth="2.5" fill="none" stroke="currentColor"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></g></svg>
                         <input
                         type="email"
                         name="contact_email"
@@ -131,8 +145,8 @@ function SignUpOrgCard() {
                         required
                         value={formData.contact_email}
                         onChange={handleChange}
+                        className={`input ${error ? 'border-error' : formData.contact_email && /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(formData.contact_email) ? 'border-success' : ''}`}
                       />
-                      </label>
                       {error && <p className="text-red-500 mt-2">{error}</p>}
                       <button className="btn bg-[#7539C2] text-white mt-4">Sign Up</button>
                   <div>
