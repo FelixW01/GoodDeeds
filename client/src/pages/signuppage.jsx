@@ -1,6 +1,6 @@
 import { useLocation } from 'react-router-dom';
 import SignUpCard from '../components/SignupCard';
-import SignUpOrgCard from '../components/SignuporgCard';
+import SignUpOrgCard from '../components/SignupOrgCard';
 
   
   
