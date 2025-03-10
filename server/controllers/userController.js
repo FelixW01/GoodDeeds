@@ -224,7 +224,12 @@ const loginUser = async (req, res) => {
                     process.env.SECRET_KEY,
                     { expiresIn: '1h' }
                 );
-                res.json({ token });
+                res.json({
+                    token,
+                    first_name: user.first_name,
+                    last_name: user.last_name,
+                    role: user.role,
+                });
             }
         }
     } catch (err) {

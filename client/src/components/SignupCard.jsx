@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { toast } from 'react-hot-toast';
 
 function SignUpCard() {
   const [formData, setFormData] = useState({
@@ -17,19 +18,32 @@ function SignUpCard() {
       ...formData,
       [e.target.name]: e.target.value,
     });
+    setError(null);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log('Form submitted:', formData);
-    setError(null);
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+     if (!formData.email) {
+      setError('Please input your email!');
+      return;
+    }
+
+    if (!emailPattern.test(formData.email)) {
+      setError(`Invalid Email: ${formData.email}`);
+      return;
+    }
 
     try {
       const response = await axios.post('/api/user/create', formData);
       console.log('User created:', response.data);
+      toast.success('Account created successfully!')
     } catch (err) {
       console.error('Error creating user:', err.response?.data || err.message);
       setError(err.response?.data?.message || 'Something went wrong');
+      toast.error('Error creating user')
     }
   };
 
@@ -56,45 +70,43 @@ function SignUpCard() {
                     <>
                       <legend className="fieldset-legend">First name</legend>
                       <input
+                        required
                         type="text"
                         name="first_name"
                         className="input"
-                        placeholder="First Name"
-                        required
+                        placeholder="First Name"                       
                         minLength="2"
                         value={formData.first_name}
                         onChange={handleChange}
                       />
                       <legend className="fieldset-legend">Last name</legend>
                       <input
+                        required
                         type="text"
                         name="last_name"
                         className="input"
                         placeholder="Last Name"
-                        required
                         minLength="2"
                         value={formData.last_name}
                         onChange={handleChange}
                       />
                       <legend className="fieldset-legend">Email</legend>
-                      <label className=" input validator">
-                        <svg className="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g strokeLinejoin="round" strokeLinecap="round" strokeWidth="2.5" fill="none" stroke="currentColor"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></g></svg>
-                        <input
+                      <input
+                        required
                         type="email"
                         name="email"
-                        placeholder="Email@gmail.com"
-                        required
+                        placeholder="Email@example.com"
                         value={formData.email}
                         onChange={handleChange}
+                        className={`input ${error ? 'border-error' : formData.email && /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(formData.email) ? 'border-success' : ''}`}
                       />
-                      </label>
-                      <div className="validator-hint hidden">Enter valid email address</div>
 
                       <legend className="fieldset-legend">Password</legend>
                       <label className="input validator">
                         <svg className="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g strokeLinejoin="round" strokeLinecap="round" strokeWidth="2.5" fill="none" stroke="currentColor"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"></path><circle cx="16.5" cy="7.5" r=".5" fill="currentColor"></circle></g></svg>
-                        <input type="password" 
+                        <input 
                         required 
+                        type="password" 
                         placeholder="Password" 
                         minLength="8" 
                         pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" 
