@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 function Navbar() {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   return (
     <>
@@ -22,7 +22,13 @@ function Navbar() {
             </div>
         </div>
         <div className="navbar-center">
-            <a className="btn btn-ghost text-xl transition duration-300 ease-in-out hover:bg-purple-950 hover: text-white hover:shadow-md border-none"><Link to="/">GoodDeeds</Link></a>
+            <Link 
+              to="/" 
+              className="btn btn-ghost text-xl transition duration-300 ease-in-out 
+              hover:bg-purple-950 text-white hover:shadow-md border-none"
+            >
+              GoodDeeds
+            </Link>
         </div>
         <div className="navbar-end">
             <button className="btn btn-ghost btn-circle text-xl transition duration-300 ease-in-out hover:bg-purple-950 hover: text-white hover:shadow-md border-none">
@@ -39,7 +45,12 @@ function Navbar() {
       
         <div className="navbar bg-[#664395] shadow-sm gap-3 justify-between items-center text-white hidden lg:flex">
               <div>
-                <a className="btn border-none shadow-none bg-[#664395] text-xl text-white hover:bg-purple-950"><Link to="/">GoodDeeds</Link></a>
+                <Link 
+                  to="/" 
+                  className="btn border-none shadow-none bg-[#664395] text-xl text-white hover:bg-purple-950"
+                >
+                  GoodDeeds
+                </Link>
               </div>
               <div className="flex gap-4">
                 <button className="border-0 btn btn-ghost transition duration-300 ease-in-out hover:bg-purple-950 hover: text-white hover:shadow-md"><Link to="/listing">Events</Link></button>

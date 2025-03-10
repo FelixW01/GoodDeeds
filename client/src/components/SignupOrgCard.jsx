@@ -1,10 +1,26 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 function SignUpOrgCard() {
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    organizationName: '',
+    contactEmail: '',
+  });
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('submitted');
+    console.log('Form submitted:', formData);
   };
 
   return (
@@ -13,7 +29,7 @@ function SignUpOrgCard() {
         <div className="hero-content flex-col lg:flex-row-reverse">
           <div className="text-center lg:text-left relative z-10">
             <div className="bg-black bg-opacity-55 backdrop-blur-sm p-6 rounded-lg shadow-lg">
-              <h1 className="text-5xl font-bold text-white">
+              <h1 className="lg:text-5xl font-bold text-white text-4xl">
                 Register your organization today!
               </h1>
               <p className="py-6 text-lg text-white">
@@ -26,17 +42,71 @@ function SignUpOrgCard() {
               <form onSubmit={handleSubmit}>
                 <fieldset className="fieldset">
                       <legend className="fieldset-legend">First name</legend>
-                      <input type="text" className="input" placeholder="First Name" />
+                      <input
+                        type="text"
+                        name="firstName"
+                        className="input"
+                        placeholder="First Name"
+                        required
+                        minLength="2"
+                        value={formData.firstName}
+                        onChange={handleChange}
+                      />
                       <legend className="fieldset-legend">Last name</legend>
-                      <input type="text" className="input" placeholder="Last Name" />
+                      <input
+                        type="text"
+                        name="lastName"
+                        className="input"
+                        placeholder="Last Name"
+                        required
+                        minLength="2"
+                        value={formData.lastName}
+                        onChange={handleChange}
+                      />
                       <legend className="fieldset-legend">Email</legend>
-                      <input type="email" className="input" placeholder="Email" />
+                      <input
+                        type="email"
+                        name="email"
+                        className="input"
+                        placeholder="Email"
+                        required
+                        pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                        value={formData.email}
+                        onChange={handleChange}
+                      />
                       <legend className="fieldset-legend">Password</legend>
-                      <input type="password" className="input" placeholder="Password" />
+                      <input
+                        type="password"
+                        name="password"
+                        className="input"
+                        placeholder="Password"
+                        required
+                        minLength="6"
+                        value={formData.password}
+                        onChange={handleChange}
+                      />
                       <legend className="fieldset-legend">Organization Name</legend>
-                      <input type="text" className="input" placeholder="Organization Name" />
+                      <input
+                        type="text"
+                        name="organizationName"
+                        className="input"
+                        placeholder="Organization Name"
+                        required
+                        minLength="3"
+                        value={formData.organizationName}
+                        onChange={handleChange}
+                      />
                       <legend className="fieldset-legend">Contact Email</legend>
-                      <input type="email" className="input" placeholder="Contact Email" />     
+                      <input
+                        type="email"
+                        name="contactEmail"
+                        className="input"
+                        placeholder="Contact Email"
+                        required
+                        pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                        value={formData.contactEmail}
+                        onChange={handleChange}
+                      />   
                       <button className="btn bg-[#7539C2] text-white mt-4">Sign Up</button>
                   <div>
                     Registering as a <strong>volunteer?</strong>
