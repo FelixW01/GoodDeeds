@@ -15,7 +15,7 @@ function Navbar() {
             <ul
                 tabIndex={0}
                 className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow text-black">
-                <li><Link to="/signup">For Organizations</Link></li>
+                <li><Link to="/signuporg">For Organizations</Link></li>
                 <li><Link to="/signup">For Volunteers</Link></li>
                 <li><Link to="/listing">Events</Link></li>
             </ul>
@@ -43,7 +43,7 @@ function Navbar() {
               </div>
               <div className="flex gap-4">
                 <button className="border-0 btn btn-ghost transition duration-300 ease-in-out hover:bg-purple-950 hover: text-white hover:shadow-md"><Link to="/listing">Events</Link></button>
-                <button className="border-0 btn btn-ghost transition duration-300 ease-in-out hover:bg-purple-950 hover: text-white hover:shadow-md"><Link to="/signup">For Organizations</Link></button>
+                <button className="border-0 btn btn-ghost transition duration-300 ease-in-out hover:bg-purple-950 hover: text-white hover:shadow-md"><Link to="/signuporg">For Organizations</Link></button>
                 <button className="border-0 btn btn-ghost transition duration-300 ease-in-out hover:bg-purple-950 hover: text-white hover:shadow-md"><Link to="/signup">For Volunteers</Link></button>
               </div>
             {isLoggedIn ?
