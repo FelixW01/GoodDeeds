@@ -1,13 +1,6 @@
 const pool = require('../db/config.js');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { v4: uuidv4 } = require('uuid');
-
-// Validate UUID
-const validateUUID = (id) => {
-    const uuidRegex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/;
-    return uuidRegex.test(id);
-};
 
 // Create a new user
 const createUser = async (req, res) => {
@@ -97,9 +90,6 @@ const getAllUsers = async (req, res) => {
 // Get a user by ID
 const getUserById = async (req, res) => {
     const userId = req.params.id;
-    if (!validateUUID(userId)) {
-        return res.status(400).json({ message: 'Invalid user ID' });
-    }
 
     const connection = await pool.getConnection();
     try {
@@ -120,9 +110,6 @@ const getUserById = async (req, res) => {
 // Update a user
 const updateUser = async (req, res) => {
     const userId = req.params.id;
-    if (!validateUUID(userId)) {
-        return res.status(400).json({ message: 'Invalid user ID' });
-    }
 
     const { email, password, role, first_name, last_name, profile_picture } = req.body;
 
@@ -191,9 +178,6 @@ const updateUser = async (req, res) => {
 // Delete a user
 const deleteUser = async (req, res) => {
     const userId = req.params.id;
-    if (!validateUUID(userId)) {
-        return res.status(400).json({ message: 'Invalid user ID' });
-    }
 
     const connection = await pool.getConnection();
     try {
