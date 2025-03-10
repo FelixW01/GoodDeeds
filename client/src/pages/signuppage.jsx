@@ -1,10 +1,15 @@
-import { Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import SignUpCard from '../components/SignupCard';
+import SignUpOrgCard from '../components/SignuporgCard';
 
+  
+  
 function SignUpPage() {
+const location = useLocation();
+const isOrgSignUp = location.pathname === '/signuporg';
 
   return (
-    <SignUpCard/>
+    isOrgSignUp ? <SignUpOrgCard/> : <SignUpCard/>
   )
 }
 

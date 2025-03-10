@@ -27,9 +27,9 @@ function LoginCard() {
             <div className="card-body">
               <form onSubmit={handleSubmit}>
                 <fieldset className="fieldset">
-                  <label className="fieldset-label">Email</label>
+                  <legend className="fieldset-legend">Email</legend>
                   <input type="email" className="input" placeholder="Email" />
-                  <label className="fieldset-label">Password</label>
+                  <legend className="fieldset-legend">Password</legend>
                   <input type="password" className="input" placeholder="Password" />
                   <div>
                     <a className="link link-hover">Forgot password?</a>

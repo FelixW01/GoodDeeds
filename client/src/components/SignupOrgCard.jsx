@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-function SignUpCard() {
+function SignUpOrgCard() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -14,7 +14,7 @@ function SignUpCard() {
           <div className="text-center lg:text-left relative z-10">
             <div className="bg-black bg-opacity-55 backdrop-blur-sm p-6 rounded-lg shadow-lg">
               <h1 className="text-5xl font-bold text-white">
-                Become a member today!
+                Register your organization today!
               </h1>
               <p className="py-6 text-lg text-white">
                 Making the world a better place for everybody, one good deed at a time!
@@ -25,7 +25,6 @@ function SignUpCard() {
             <div className="card-body">
               <form onSubmit={handleSubmit}>
                 <fieldset className="fieldset">
-                    <>
                       <legend className="fieldset-legend">First name</legend>
                       <input type="text" className="input" placeholder="First Name" />
                       <legend className="fieldset-legend">Last name</legend>
@@ -34,13 +33,17 @@ function SignUpCard() {
                       <input type="email" className="input" placeholder="Email" />
                       <legend className="fieldset-legend">Password</legend>
                       <input type="password" className="input" placeholder="Password" />
+                      <legend className="fieldset-legend">Organization Name</legend>
+                      <input type="text" className="input" placeholder="Organization Name" />
+                      <legend className="fieldset-legend">Contact Email</legend>
+                      <input type="email" className="input" placeholder="Contact Email" />     
                       <button className="btn bg-[#7539C2] text-white mt-4">Sign Up</button>
-                    </>
                   <div>
-                    Registering as an <strong>organization?</strong>
+                    Registering as a <strong>volunteer?</strong>
                       {' '}
-                    <Link to="/signuporg" className="text-[#7539C2]">Click here!</Link>
+                    <Link to="/signup" className="text-[#7539C2]">Click here!</Link>
                   </div>
+
                   <div>
                     Already have an account?
                       {' '}
@@ -56,4 +59,4 @@ function SignUpCard() {
   )
 }
 
-export default SignUpCard
+export default SignUpOrgCard
