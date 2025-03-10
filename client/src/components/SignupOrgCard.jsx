@@ -1,15 +1,18 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 function SignUpOrgCard() {
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    first_name: '',
+    last_name: '',
     email: '',
     password: '',
-    organizationName: '',
-    contactEmail: '',
+    name: '',
+    contact_email: '',
   });
+
+  const [error, setError] = useState(null);
 
   const handleChange = (e) => {
     setFormData({
@@ -18,9 +21,18 @@ function SignUpOrgCard() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log('Form submitted:', formData);
+    setError(null);
+
+    try {
+      const response = await axios.post('/api/organizations/create', formData);
+      console.log('Organization account created:', response.data);
+    } catch (err) {
+      console.error('Error creating organization account:', err.response?.data || err.message);
+      setError(err.response?.data?.message || 'Something went wrong');
+    }
   };
 
   return (
@@ -44,23 +56,23 @@ function SignUpOrgCard() {
                       <legend className="fieldset-legend">First name</legend>
                       <input
                         type="text"
-                        name="firstName"
+                        name="first_name"
                         className="input"
                         placeholder="First Name"
                         required
                         minLength="2"
-                        value={formData.firstName}
+                        value={formData.first_name}
                         onChange={handleChange}
                       />
                       <legend className="fieldset-legend">Last name</legend>
                       <input
                         type="text"
-                        name="lastName"
+                        name="last_name"
                         className="input"
                         placeholder="Last Name"
                         required
                         minLength="2"
-                        value={formData.lastName}
+                        value={formData.last_name}
                         onChange={handleChange}
                       />
                       <legend className="fieldset-legend">Email</legend>
@@ -70,7 +82,7 @@ function SignUpOrgCard() {
                         className="input"
                         placeholder="Email"
                         required
-                        pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                        pattern="^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
                         value={formData.email}
                         onChange={handleChange}
                       />
@@ -81,32 +93,33 @@ function SignUpOrgCard() {
                         className="input"
                         placeholder="Password"
                         required
-                        minLength="6"
+                        minLength="8"
                         value={formData.password}
                         onChange={handleChange}
                       />
                       <legend className="fieldset-legend">Organization Name</legend>
                       <input
                         type="text"
-                        name="organizationName"
+                        name="name"
                         className="input"
                         placeholder="Organization Name"
                         required
                         minLength="3"
-                        value={formData.organizationName}
+                        value={formData.name}
                         onChange={handleChange}
                       />
                       <legend className="fieldset-legend">Contact Email</legend>
                       <input
                         type="email"
-                        name="contactEmail"
+                        name="contact_email"
                         className="input"
                         placeholder="Contact Email"
                         required
                         pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
-                        value={formData.contactEmail}
+                        value={formData.contact_email}
                         onChange={handleChange}
-                      />   
+                      />
+                      {error && <p className="text-red-500 mt-2">{error}</p>}
                       <button className="btn bg-[#7539C2] text-white mt-4">Sign Up</button>
                   <div>
                     Registering as a <strong>volunteer?</strong>
