@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../../middleware/auth');
+const isAdmin = require('../../middleware/isAdmin');
 const {
   createUser,
   getAllUsers,
@@ -12,7 +13,7 @@ const {
 
 // API routes for user
 router.post('/create', createUser);
-router.get('/all', auth, getAllUsers);
+router.get('/all', isAdmin, getAllUsers);
 router.get('/user/:id', auth, getUserById);
 router.put('/user/:id', auth, updateUser);
 router.delete('/user/:id', auth, deleteUser);
