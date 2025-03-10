@@ -19,6 +19,7 @@ function App() {
             <Route path="/createlist" element={<CreateListPage />}/>
             <Route path="/login" element={<LoginPage />}/>
             <Route path="/signup" element={<SignUpPage />}/>
+            <Route path="/signuporg" element={<SignUpPage />}/>
             <Route path="/listing" element={<ListingPage />}/>
             <Route path="*" element={<Error />}/>
           </Route>
