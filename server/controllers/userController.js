@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 
 // Create a new user
 const createUser = async (req, res) => {
-    const { email, password, role, first_name, last_name, profile_picture = null } = req.body;
+    const { email, password, first_name, last_name, profile_picture = null } = req.body;
 
     // Validate email
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -15,11 +15,6 @@ const createUser = async (req, res) => {
     // Validate password
     if (!password || password.length < 8) {
         return res.status(400).json({ message: 'Password must be at least 8 characters long' });
-    }
-
-    // Validate role
-    if (!role || !['user', 'admin', 'organization'].includes(role)) {
-        return res.status(400).json({ message: 'Invalid role' });
     }
 
     // Validate first name and last name
@@ -47,6 +42,9 @@ const createUser = async (req, res) => {
         if (existingEmail.length > 0) {
             return res.status(400).json({ message: 'Email already exists' });
         }
+
+        // Set the role to 'user' by default
+        const role = 'user';
 
         // Insert the user into the database
         const [result] = await connection.query(`
