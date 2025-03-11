@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import axios from 'axios';
-import { toast } from 'react-hot-toast';
+
+import { UserContext } from '../../context/userContext';
 
 function LoginCard() {
   const [formData, setFormData] = useState({
@@ -9,12 +10,9 @@ function LoginCard() {
     password: '',
   });
 
-  const [error, setError] = useState(null);
+  const { login, error, user } = useContext(UserContext); 
 
-  function capitalize(word) {
-    if (!word) return '';
-    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-  }
+  
 
   const handleChange = (e) => {
     setFormData({
@@ -26,15 +24,12 @@ function LoginCard() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log('Form submitted:', formData);
-    setError(null);
 
     try {
-      const response = await axios.post('/api/login', formData);
-      console.log('Successfully logged in:', response.data);
-      toast.success(`Welcome, ${capitalize(response.data.first_name)} ${capitalize(response.data.last_name)} `)
+      await login(formData);
+      user ? console.log('User logged in:', user) : null;
     } catch (err) {
       console.error('Error creating organization account:', err.response?.data || err.message);
-      setError(err.response?.data?.message || 'Something went wrong');
     }
   };
 

@@ -7,10 +7,12 @@ import LoginPage from './pages/loginpage';
 import SignUpPage from './pages/signuppage';
 import ListingPage from './pages/listingpage';
 import Layout from "./pages/layout.jsx"
+import { UserProvider } from '../context/userContext';
 
 function App() {
 
   return (
+  <UserProvider>
     <BrowserRouter>
       <Routes>
           <Route path="/" element={<Layout/>}>
@@ -25,6 +27,7 @@ function App() {
           </Route>
       </Routes>
     </BrowserRouter>
+  ß</UserProvider>
   )
 }
 
