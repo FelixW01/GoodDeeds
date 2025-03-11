@@ -41,13 +41,13 @@ const {
 } = require('../../controllers/userEventController');
 
 // API routes for user
-router.post('/user/create', createUser);
-router.get('/user/all', isAdmin, getAllUsers);
-router.get('/user/profile', auth, getUserProfile);
-router.put('/user/:id', auth, updateUser);
-router.delete('/user/:id', auth, deleteUser);
-router.post('/login', loginUser);
-router.post('logout', auth, logoutUser);
+router.post('/user/create', createUser); // Create a new user
+router.get('/user/all', isAdmin, getAllUsers); // Get all users (admin only)
+router.get('/user/profile', auth, getUserProfile); // Get the authenticated user's profile
+router.put('/user/update', auth, updateUser); // Update the authenticated user
+router.delete('/user/delete', auth, deleteUser); // Delete the authenticated user
+router.post('/login', loginUser); // User login
+router.post('/logout', auth, logoutUser); // User logout
 
 // Organization Routes
 router.post('/organizations/create', signUpOrganization); // Sign up a new organization
@@ -59,9 +59,9 @@ router.delete('/organizations/:id', isAdminOrOrganization, deleteOrganization); 
 // Event Routes
 router.post('/events/create', isAdminOrOrganization, createEvent); // Only authenticated users can create events
 router.get('/events/all', getAllEvents); // Public route to get all events
-router.get('/events/:id', getEventById); // Public route to get event by ID
-router.put('/events/:id', isAdminOrOrganization, updateEvent); // Only authenticated users can update events
-router.delete('/events/:id', isAdminOrOrganization, deleteEvent); // Only authenticated users can delete events
+router.get('/events/get', getEventById); // Public route to get event by ID
+router.put('/events/update', isAdminOrOrganization, updateEvent); // Only authenticated users can update events
+router.delete('/events/delete', isAdminOrOrganization, deleteEvent); // Only authenticated users can delete events
 
 // User Event Routes
 router.post('/user-events/register', isAdminOrUser, registerUserForEvent); // Only authenticated users can register for events
