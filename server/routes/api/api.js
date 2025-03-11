@@ -7,7 +7,7 @@ const isAdminOrUser = require('../../middleware/isAdminOrUser');
 const {
     createUser,
     getAllUsers,
-    getUserById,
+    getUserProfile,
     updateUser,
     deleteUser,
     loginUser,
@@ -43,7 +43,7 @@ const {
 // API routes for user
 router.post('/user/create', createUser);
 router.get('/user/all', isAdmin, getAllUsers);
-router.get('/user/:id', auth, getUserById);
+router.get('/user/profile', auth, getUserProfile);
 router.put('/user/:id', auth, updateUser);
 router.delete('/user/:id', auth, deleteUser);
 router.post('/login', loginUser);
