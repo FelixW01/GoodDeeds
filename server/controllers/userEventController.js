@@ -76,15 +76,14 @@ const getUserEventsByUserId = async (req, res) => {
 
 // Get user-event relationship by ID
 const getUserEventById = async (req, res) => {
-    const userEventId = req.params.id;
+    const { userEventId } = req.body; // Get user_event_id from the request body
     const connection = await pool.getConnection();
     try {
         const [userEvent] = await connection.query('SELECT * FROM user_events WHERE user_event_id = ?', [userEventId]);
         if (userEvent.length === 0) {
-            res.status(404).json({ message: 'User event not found' });
-        } else {
-            res.json(userEvent[0]);
+            return res.status(404).json({ message: 'User  event not found' });
         }
+        res.json(userEvent[0]);
     } catch (err) {
         console.error('Error fetching user event:', err);
         res.status(500).json({ message: 'Error fetching user event' });
@@ -95,8 +94,7 @@ const getUserEventById = async (req, res) => {
 
 // Update a user-event relationship
 const updateUserEvent = async (req, res) => {
-    const userEventId = req.params.id;
-    const { status, progress, hours_worked } = req.body;
+    const { userEventId, status, progress, hours_worked } = req.body; // Get user_event_id from the request body
 
     const connection = await pool.getConnection();
     try {
@@ -106,9 +104,9 @@ const updateUserEvent = async (req, res) => {
         );
 
         if (result.affectedRows === 0) {
-            res.status(404).json({ message: 'User event not found' });
+            return res.status(404).json({ message: 'User  event not found' });
         } else {
-            res.json({ message: 'User event updated successfully' });
+            res.json({ message: 'User  event updated successfully' });
         }
     } catch (err) {
         console.error('Error updating user event:', err);
@@ -120,14 +118,15 @@ const updateUserEvent = async (req, res) => {
 
 // Delete a user-event relationship
 const deleteUserEvent = async (req, res) => {
-    const userEventId = req.params.id;
+    const { userEventId } = req.body; // Get user_event_id from the request body
+
     const connection = await pool.getConnection();
     try {
         const [result] = await connection.query('DELETE FROM user_events WHERE user_event_id = ?', [userEventId]);
         if (result.affectedRows === 0) {
-            res.status(404).json({ message: 'User event not found' });
+            return res.status(404).json({ message: 'User  event not found' });
         } else {
-            res.json({ message: 'User event deleted successfully' });
+            res.json({ message: 'User  event deleted successfully' });
         }
     } catch (err) {
         console.error('Error deleting user event:', err);
@@ -139,7 +138,7 @@ const deleteUserEvent = async (req, res) => {
 
 // Get all user-events for an organization's events
 const getUserEventsByOrganizationId = async (req, res) => {
-    const orgId = req.params.orgId; // Get the organization ID from the request parameters
+    const orgId = req.user.orgId
 
     const connection = await pool.getConnection();
     try {
