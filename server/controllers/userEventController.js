@@ -2,11 +2,12 @@ const pool = require('../db/config.js');
 
 // Register a user for an event
 const registerUserForEvent = async (req, res) => {
-    const { user_id, event_id } = req.body;
+    const { event_id } = req.body;
+    const userId = req.user.userId; // Get userId from the authenticated user
 
     // Validate required fields
-    if (!user_id || !event_id) {
-        return res.status(400).json({ message: 'User ID and Event ID are required' });
+    if (!event_id) {
+        return res.status(400).json({ message: 'Event ID is required' });
     }
 
     const connection = await pool.getConnection();
@@ -14,14 +15,14 @@ const registerUserForEvent = async (req, res) => {
         // Insert the user-event relationship into the database
         const [result] = await connection.query(
             'INSERT INTO user_events (user_id, event_id) VALUES (?, ?)',
-            [user_id, event_id]
+            [userId, event_id]
         );
 
         res.status(201).json({
             message: 'User registered for event successfully',
             userEvent: {
                 user_event_id: result.insertId,
-                user_id,
+                user_id: userId,
                 event_id,
             },
         });
@@ -47,13 +48,13 @@ const getAllUserEvents = async (req, res) => {
     }
 };
 
-// Get all user-event relationships for a specific user
+// Get all user-event relationships for the authenticated user
 const getUserEventsByUserId = async (req, res) => {
-    const userId = req.params.userId; // Get the user ID from the request parameters
+    const userId = req.user.userId; // Get userId from the authenticated user
 
     const connection = await pool.getConnection();
     try {
-        // Query the database for all user-events associated with the given user ID
+        // Query the database for all user-events associated with the authenticated user
         const [userEvents] = await connection.query(
             'SELECT * FROM user_events WHERE user_id = ?',
             [userId]
@@ -76,10 +77,10 @@ const getUserEventsByUserId = async (req, res) => {
 
 // Get user-event relationship by ID
 const getUserEventById = async (req, res) => {
-    const userEventId = req.params.id;
+    const { user_event_id } = req.body; // Get user_event_id from the request body
     const connection = await pool.getConnection();
     try {
-        const [userEvent] = await connection.query('SELECT * FROM user_events WHERE user_event_id = ?', [userEventId]);
+        const [userEvent] = await connection.query('SELECT * FROM user_events WHERE user_event_id = ?', [user_event_id]);
         if (userEvent.length === 0) {
             res.status(404).json({ message: 'User event not found' });
         } else {
@@ -95,14 +96,25 @@ const getUserEventById = async (req, res) => {
 
 // Update a user-event relationship
 const updateUserEvent = async (req, res) => {
-    const userEventId = req.params.id;
-    const { status, progress, hours_worked } = req.body;
+    const { user_event_id, status, progress, hours_worked } = req.body; // Get data from the request body
+    const userId = req.user.userId; // Get userId from the authenticated user
 
     const connection = await pool.getConnection();
     try {
+        // Ensure the user-event belongs to the authenticated user
+        const [userEvent] = await connection.query(
+            'SELECT * FROM user_events WHERE user_event_id = ? AND user_id = ?',
+            [user_event_id, userId]
+        );
+
+        if (userEvent.length === 0) {
+            return res.status(403).json({ message: 'Access denied. User event does not belong to this user.' });
+        }
+
+        // Update the user-event
         const [result] = await connection.query(
             'UPDATE user_events SET status = ?, progress = ?, hours_worked = ? WHERE user_event_id = ?',
-            [status, progress, hours_worked, userEventId]
+            [status, progress, hours_worked, user_event_id]
         );
 
         if (result.affectedRows === 0) {
@@ -120,10 +132,23 @@ const updateUserEvent = async (req, res) => {
 
 // Delete a user-event relationship
 const deleteUserEvent = async (req, res) => {
-    const userEventId = req.params.id;
+    const { user_event_id } = req.body; // Get user_event_id from the request body
+    const userId = req.user.userId; // Get userId from the authenticated user
+
     const connection = await pool.getConnection();
     try {
-        const [result] = await connection.query('DELETE FROM user_events WHERE user_event_id = ?', [userEventId]);
+        // Ensure the user-event belongs to the authenticated user
+        const [userEvent] = await connection.query(
+            'SELECT * FROM user_events WHERE user_event_id = ? AND user_id = ?',
+            [user_event_id, userId]
+        );
+
+        if (userEvent.length === 0) {
+            return res.status(403).json({ message: 'Access denied. User event does not belong to this user.' });
+        }
+
+        // Delete the user-event
+        const [result] = await connection.query('DELETE FROM user_events WHERE user_event_id = ?', [user_event_id]);
         if (result.affectedRows === 0) {
             res.status(404).json({ message: 'User event not found' });
         } else {
@@ -137,12 +162,20 @@ const deleteUserEvent = async (req, res) => {
     }
 };
 
-// Get all user-events for an organization's events
+// Get all user-events for an organization's events (based on the authenticated user's org_id)
 const getUserEventsByOrganizationId = async (req, res) => {
-    const orgId = req.params.orgId; // Get the organization ID from the request parameters
+    const userId = req.user.userId; // Get userId from the authenticated user
 
     const connection = await pool.getConnection();
     try {
+        // Fetch the organization ID linked to the authenticated user
+        const [org] = await connection.query('SELECT org_id FROM organizations WHERE user_id = ?', [userId]);
+        if (org.length === 0) {
+            return res.status(403).json({ message: 'Access denied. User is not associated with an organization.' });
+        }
+
+        const orgId = org[0].org_id;
+
         // Query the database for all user-events associated with the organization's events
         const [userEvents] = await connection.query(
             `SELECT ue.* 
