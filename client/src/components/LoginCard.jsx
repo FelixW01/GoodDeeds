@@ -1,7 +1,5 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState, useContext } from 'react';
-import axios from 'axios';
-
 import { UserContext } from '../../context/userContext';
 
 function LoginCard() {
@@ -10,9 +8,9 @@ function LoginCard() {
     password: '',
   });
 
-  const { login, error, user } = useContext(UserContext); 
+  const navigate = useNavigate();
 
-  
+  const { login, error, user } = useContext(UserContext); 
 
   const handleChange = (e) => {
     setFormData({
@@ -23,11 +21,9 @@ function LoginCard() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-
     try {
       await login(formData);
-      user ? console.log('User logged in:', user) : null;
+      navigate('/');
     } catch (err) {
       console.error('Error creating organization account:', err.response?.data || err.message);
     }

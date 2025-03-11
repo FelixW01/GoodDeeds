@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 
@@ -14,6 +14,8 @@ function SignUpOrgCard() {
   });
 
   const [error, setError] = useState(null);
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({
@@ -44,7 +46,8 @@ function SignUpOrgCard() {
     try {
       const response = await axios.post('/api/organizations/create', formData);
       console.log('Organization account created:', response.data);
-      toast.success('Account created successfully!')
+      toast.success('Account created successfully!');
+      navigate('/login');
     } catch (err) {
       console.error('Error creating organization account:', err.response?.data || err.message);
       setError(err.response?.data?.message || 'Something went wrong');

@@ -1,9 +1,26 @@
-import { useState } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { UserContext } from '../../context/userContext';
+import { toast } from 'react-hot-toast';
 
 function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { user, logout } = useContext(UserContext); 
 
+  useEffect(() => {
+    user ? setIsLoggedIn(true) : setIsLoggedIn(false);
+  },[user])
+
+  const handleLogOut = async () => {
+    try {
+      await logout();
+      setIsLoggedIn(false);
+      toast.success(`Successfully logged out.} `)
+    }
+    catch (err) {
+      console.error('Error logging out:', err);
+    }
+  }
   return (
     <>
       <div className="navbar shadow-sm lg:hidden bg-[#664395] text-white">
@@ -77,7 +94,7 @@ function Navbar() {
                             </a>
                         </li>
                         <li><a>Settings</a></li>
-                        <li><a>Logout</a></li>
+                        <li onClick={handleLogOut}><a>Logout</a></li>
                     </ul>
                 </div>
             </div> :
