@@ -85,6 +85,20 @@ const getAllUsers = async (req, res) => {
     }
 };
 
+const getMe = (req, res) => {
+    const {token} = req.cookies;
+    if(token) {
+        jwt.verify(token, process.env.JWT_SECRET, {}, (err, user) => {
+            if(err) {
+                res.status(401).json({error: 'Not authorized, invalid token'})
+            }
+            res.status(200).json(user)
+        })
+    } else {
+        res.json(null)
+    }
+}
+
 // Get a user by ID
 const getUserById = async (req, res) => {
     const userId = req.params.id;
@@ -258,4 +272,4 @@ const logoutUser = (req, res) => {
     res.json({ message: 'User logged out successfully' });
 };
 
-module.exports = { createUser, getAllUsers, getUserById, updateUser, deleteUser, loginUser, logoutUser };
+module.exports = { createUser, getAllUsers, getUserById, updateUser, deleteUser, loginUser, logoutUser, getMe };

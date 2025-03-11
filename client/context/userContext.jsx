@@ -13,6 +13,19 @@ const UserProvider = ({ children }) => {
     return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
   }
 
+  useEffect(() => {
+    getMe();
+  },[])
+
+  const getMe = async () => {
+    try {
+      const response = await axios.get('/api/me');
+      setUser (response.data);
+    } catch (error) {
+      console.error('Get me failed:', error);
+    }
+  }
+
   const login = async (userData) => {
     try {
       const response = await axios.post('/api/login', userData);
@@ -27,7 +40,7 @@ const UserProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      // await axios.post('/api/logout');
+      await axios.post('/api/logout');
       setUser (null);
     } catch (error) {
       console.error('Logout failed:', error);

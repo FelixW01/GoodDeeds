@@ -11,7 +11,8 @@ const {
     updateUser,
     deleteUser,
     loginUser,
-    logoutUser
+    logoutUser,
+    getMe
 } = require('../../controllers/userController');
 
 const {
@@ -48,6 +49,7 @@ router.put('/user/:id', auth, updateUser);
 router.delete('/user/:id', auth, deleteUser);
 router.post('/login', loginUser);
 router.post('logout', auth, logoutUser);
+router.get('/me', auth, getMe);
 
 // Organization Routes
 router.post('/organizations/create', signUpOrganization); // Sign up a new organization

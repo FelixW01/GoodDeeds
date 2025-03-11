@@ -4,6 +4,7 @@ const authMiddleware = (req, res, next) => {
   // Get the token from the cookie
   const token = req.cookies.token;
 
+  console.log(token, '<< token in middleware')
   if (!token) {
     // If token is not provided, return 401 Unauthorized
     return res.status(401).json({ error: 'Unauthorized' });
