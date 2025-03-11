@@ -47,7 +47,7 @@ router.get('/user/profile', auth, getUserProfile);
 router.put('/user/:id', auth, updateUser);
 router.delete('/user/:id', auth, deleteUser);
 router.post('/login', loginUser);
-router.post('logout', auth, logoutUser);
+router.post('/logout', auth, logoutUser);
 
 // Organization Routes
 router.post('/organizations/create', signUpOrganization); // Sign up a new organization
