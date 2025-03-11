@@ -1,7 +1,8 @@
 const pool = require('../db/config.js');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
-//signup an organization
+// Sign up an organization
 const signUpOrganization = async (req, res) => {
     const { email, password, first_name, last_name, profile_picture = null, name, description, logo, website, contact_email } = req.body;
 
@@ -61,13 +62,29 @@ const signUpOrganization = async (req, res) => {
         const userId = userResult[0].user_id; // Get the user_id from the query result
 
         // Step 3: Create an organization profile linked to the user
-        await connection.query(
+        const [orgResult] = await connection.query(
             'INSERT INTO organizations (user_id, name, description, logo, website, contact_email) VALUES (?, ?, ?, ?, ?, ?)',
             [userId, name, description, logo, website, contact_email]
         );
 
+        const orgId = orgResult.insertId; // Get the org_id from the query result
+
         // Commit the transaction
         await connection.commit();
+
+        // Create JWT token with orgId
+        const token = jwt.sign(
+            { userId, email, role: 'organization', orgId }, // Include orgId in the token
+            process.env.SECRET_KEY,
+            { expiresIn: '1h' }
+        );
+
+        res.cookie('token', token, {
+            httpOnly: true,
+            maxAge: 3600000,
+            secure: process.env.NODE_ENV === 'production', // Use HTTPS in production
+            sameSite: "strict",
+        });
 
         res.status(201).json({
             message: 'Organization sign-up successful',
@@ -107,7 +124,7 @@ const signUpOrganization = async (req, res) => {
 
 // Get organization by ID
 const getOrganizationById = async (req, res) => {
-    const orgId = req.params.id;
+    const orgId = req.user.orgId; // Get orgId from the authenticated user
 
     const connection = await pool.getConnection();
     try {
@@ -127,7 +144,7 @@ const getOrganizationById = async (req, res) => {
 
 // Update organization profile
 const updateOrganization = async (req, res) => {
-    const orgId = req.params.id;
+    const orgId = req.user.orgId; // Get orgId from the authenticated user
     const { name, description, logo, website, contact_email } = req.body;
 
     const connection = await pool.getConnection();
@@ -152,7 +169,7 @@ const updateOrganization = async (req, res) => {
 
 // Delete organization
 const deleteOrganization = async (req, res) => {
-    const orgId = req.params.id;
+    const orgId = req.user.orgId; // Get orgId from the authenticated user
 
     const connection = await pool.getConnection();
     try {

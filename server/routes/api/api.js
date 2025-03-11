@@ -52,9 +52,9 @@ router.post('/logout', auth, logoutUser); // User logout
 // Organization Routes
 router.post('/organizations/create', signUpOrganization); // Sign up a new organization
 router.get('/organizations/all', auth, getAllOrganizations); // Get all organizations
-router.get('/organizations/:id', auth, getOrganizationById); // Get an organization by ID
-router.put('/organizations/:id', isAdminOrOrganization, updateOrganization); // Update an organization by ID
-router.delete('/organizations/:id', isAdminOrOrganization, deleteOrganization); // Delete an organization by ID
+router.get('/organizations/get', auth, getOrganizationById); // Get an organization by ID
+router.put('/organizations/update', isAdminOrOrganization, updateOrganization); // Update an organization by ID
+router.delete('/organizations/delete', isAdminOrOrganization, deleteOrganization); // Delete an organization by ID
 
 // Event Routes
 router.post('/events/create', isAdminOrOrganization, createEvent); // Only authenticated users can create events
