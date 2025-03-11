@@ -16,7 +16,7 @@ const {
 
 const {
     signUpOrganization,
-    getOrganizationById,
+    getOrganizationByUserId,
     updateOrganization,
     deleteOrganization,
     getAllOrganizations,
@@ -44,33 +44,33 @@ const {
 router.post('/user/create', createUser);
 router.get('/user/all', isAdmin, getAllUsers);
 router.get('/user/profile', auth, getUserProfile);
-router.put('/user/:id', auth, updateUser);
-router.delete('/user/:id', auth, deleteUser);
+router.put('/user/update', auth, updateUser);
+router.delete('/user/delete', auth, deleteUser);
 router.post('/login', loginUser);
 router.post('/logout', auth, logoutUser);
 
 // Organization Routes
 router.post('/organizations/create', signUpOrganization); // Sign up a new organization
-router.get('/organizations/all', auth, getAllOrganizations); // Get all organizations
-router.get('/organizations/:id', auth, getOrganizationById); // Get an organization by ID
-router.put('/organizations/:id', isAdminOrOrganization, updateOrganization); // Update an organization by ID
-router.delete('/organizations/:id', isAdminOrOrganization, deleteOrganization); // Delete an organization by ID
+router.get('/organizations/all', getAllOrganizations); // Get all organizations
+router.get('/organizations/get', auth, getOrganizationByUserId); // Get an organization by ID
+router.put('/organizations/update', isAdminOrOrganization, updateOrganization); // Update an organization by ID
+router.delete('/organizations/delete', isAdminOrOrganization, deleteOrganization); // Delete an organization by ID
 
 // Event Routes
 router.post('/events/create', isAdminOrOrganization, createEvent); // Only authenticated users can create events
 router.get('/events/all', getAllEvents); // Public route to get all events
-router.get('/events/:id', getEventById); // Public route to get event by ID
-router.put('/events/:id', isAdminOrOrganization, updateEvent); // Only authenticated users can update events
-router.delete('/events/:id', isAdminOrOrganization, deleteEvent); // Only authenticated users can delete events
+router.get('/events/get', getEventById); // Public route to get event by ID
+router.put('/events/update', isAdminOrOrganization, updateEvent); // Only authenticated users can update events
+router.delete('/events/delete', isAdminOrOrganization, deleteEvent); // Only authenticated users can delete events
 
 // User Event Routes
 router.post('/user-events/register', isAdminOrUser, registerUserForEvent); // Only authenticated users can register for events
 router.get('/user-events/all', isAdmin, getAllUserEvents); // Only authenticated users can view all user-event relationships
-router.get('/user-events/user/:userId', isAdminOrUser, getUserEventsByUserId); // Get all user-events for a specific user
-router.get('/user-events/:id', isAdminOrUser, getUserEventById); // Get a specific user-event relationship by ID
-router.put('/user-events/:id', isAdminOrUser, updateUserEvent); // Only authenticated users can update user-event relationships
-router.delete('/user-events/:id', isAdminOrUser, deleteUserEvent); // Only authenticated users can delete user-event relationships
-router.get('/user-events/org/:orgId', isAdminOrOrganization, getUserEventsByOrganizationId); // Organizations can view user-events for their own events
+router.get('/user-events/user/get', isAdminOrUser, getUserEventsByUserId); // Get all user-events for a specific user
+router.get('/user-events/get', isAdminOrUser, getUserEventById); // Get a specific user-event relationship by ID
+router.put('/user-events/update', isAdminOrUser, updateUserEvent); // Only authenticated users can update user-event relationships
+router.delete('/user-events/delete', isAdminOrUser, deleteUserEvent); // Only authenticated users can delete user-event relationships
+router.get('/user-events/org/get', isAdminOrOrganization, getUserEventsByOrganizationId); // Organizations can view user-events for their own events
 
 
 

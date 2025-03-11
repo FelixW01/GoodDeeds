@@ -105,18 +105,25 @@ const signUpOrganization = async (req, res) => {
     }
 };
 
-// Get organization by ID
-const getOrganizationById = async (req, res) => {
-    const orgId = req.params.id;
+// Get organization by user ID (for authenticated organization users)
+const getOrganizationByUserId = async (req, res) => {
+    const userId = req.user.userId; // Get userId from the authenticated user
 
     const connection = await pool.getConnection();
     try {
-        const [result] = await connection.query('SELECT * FROM organizations WHERE org_id = ?', [orgId]);
-        if (result.length === 0) {
-            res.status(404).json({ message: 'Organization not found' });
-        } else {
-            res.json(result[0]);
+        // Check if the user is an organization
+        const [user] = await connection.query('SELECT role FROM users WHERE user_id = ?', [userId]);
+        if (user.length === 0 || user[0].role !== 'organization') {
+            return res.status(403).json({ message: 'Access denied. User is not an organization.' });
         }
+
+        // Fetch the organization linked to the user
+        const [organization] = await connection.query('SELECT * FROM organizations WHERE user_id = ?', [userId]);
+        if (organization.length === 0) {
+            return res.status(404).json({ message: 'Organization not found' });
+        }
+
+        res.json(organization[0]);
     } catch (err) {
         console.error('Error fetching organization:', err);
         res.status(500).json({ message: 'Error fetching organization' });
@@ -125,16 +132,23 @@ const getOrganizationById = async (req, res) => {
     }
 };
 
-// Update organization profile
+// Update organization profile (for authenticated organization users)
 const updateOrganization = async (req, res) => {
-    const orgId = req.params.id;
+    const userId = req.user.userId; // Get userId from the authenticated user
     const { name, description, logo, website, contact_email } = req.body;
 
     const connection = await pool.getConnection();
     try {
+        // Check if the user is an organization
+        const [user] = await connection.query('SELECT role FROM users WHERE user_id = ?', [userId]);
+        if (user.length === 0 || user[0].role !== 'organization') {
+            return res.status(403).json({ message: 'Access denied. User is not an organization.' });
+        }
+
+        // Update the organization linked to the user
         const [result] = await connection.query(
-            'UPDATE organizations SET name = ?, description = ?, logo = ?, website = ?, contact_email = ? WHERE org_id = ?',
-            [name, description, logo, website, contact_email, orgId]
+            'UPDATE organizations SET name = ?, description = ?, logo = ?, website = ?, contact_email = ? WHERE user_id = ?',
+            [name, description, logo, website, contact_email, userId]
         );
 
         if (result.affectedRows === 0) {
@@ -150,13 +164,20 @@ const updateOrganization = async (req, res) => {
     }
 };
 
-// Delete organization
+// Delete organization (for authenticated organization users)
 const deleteOrganization = async (req, res) => {
-    const orgId = req.params.id;
+    const userId = req.user.userId; // Get userId from the authenticated user
 
     const connection = await pool.getConnection();
     try {
-        const [result] = await connection.query('DELETE FROM organizations WHERE org_id = ?', [orgId]);
+        // Check if the user is an organization
+        const [user] = await connection.query('SELECT role FROM users WHERE user_id = ?', [userId]);
+        if (user.length === 0 || user[0].role !== 'organization') {
+            return res.status(403).json({ message: 'Access denied. User is not an organization.' });
+        }
+
+        // Delete the organization linked to the user
+        const [result] = await connection.query('DELETE FROM organizations WHERE user_id = ?', [userId]);
         if (result.affectedRows === 0) {
             res.status(404).json({ message: 'Organization not found' });
         } else {
@@ -170,6 +191,7 @@ const deleteOrganization = async (req, res) => {
     }
 };
 
+// Get all organizations (public route)
 const getAllOrganizations = async (req, res) => {
     const connection = await pool.getConnection();
     try {
@@ -183,4 +205,4 @@ const getAllOrganizations = async (req, res) => {
     }
 };
 
-module.exports = { signUpOrganization, getOrganizationById, updateOrganization, deleteOrganization, getAllOrganizations };
+module.exports = { signUpOrganization, getOrganizationByUserId, updateOrganization, deleteOrganization, getAllOrganizations };

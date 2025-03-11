@@ -108,7 +108,7 @@ const getUserProfile = async (req, res) => {
 
 // Update a user
 const updateUser = async (req, res) => {
-    const userId = req.params.id;
+    const userId = req.user.userId; // Get userId from the authenticated user
 
     const { email, password, role, first_name, last_name, profile_picture } = req.body;
 
@@ -176,7 +176,7 @@ const updateUser = async (req, res) => {
 
 // Delete a user
 const deleteUser = async (req, res) => {
-    const userId = req.params.id;
+    const userId = req.user.userId; // Get userId from the authenticated user
 
     const connection = await pool.getConnection();
     try {
