@@ -224,8 +224,15 @@ const loginUser = async (req, res) => {
                     process.env.SECRET_KEY,
                     { expiresIn: '1h' }
                 );
+
+                res.cookie('token', token, {
+                    httpOnly: true,
+                    maxAge: 3600000,
+                    secure: process.env.NODE_ENV === 'production', // Use HTTPS in production
+                    sameSite: "strict",
+                });
+
                 res.json({
-                    token,
                     first_name: user.first_name,
                     last_name: user.last_name,
                     role: user.role,
@@ -240,4 +247,15 @@ const loginUser = async (req, res) => {
     }
 };
 
-module.exports = { createUser, getAllUsers, getUserById, updateUser, deleteUser, loginUser };
+// Logs out users
+const logoutUser = (req, res) => {
+    res.clearCookie('token', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production', // Use HTTPS in production
+        sameSite: "strict",
+    });
+
+    res.json({ message: 'User logged out successfully' });
+};
+
+module.exports = { createUser, getAllUsers, getUserById, updateUser, deleteUser, loginUser, logoutUser };
