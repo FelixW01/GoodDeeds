@@ -1,7 +1,5 @@
 import { Link } from 'react-router-dom';
 import { useState, useContext } from 'react';
-import axios from 'axios';
-
 import { UserContext } from '../../context/userContext';
 
 function LoginCard() {
@@ -11,8 +9,6 @@ function LoginCard() {
   });
 
   const { login, error, user } = useContext(UserContext); 
-
-  
 
   const handleChange = (e) => {
     setFormData({

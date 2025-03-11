@@ -15,6 +15,7 @@ const UserProvider = ({ children }) => {
 
   useEffect(() => {
     getMe();
+    user ? console.log('User:', user): null;
   },[])
 
   const getMe = async () => {
