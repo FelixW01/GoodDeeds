@@ -19,7 +19,7 @@ const UserProvider = ({ children }) => {
 
   const getMe = async () => {
     try {
-      const response = await axios.get('/api/me');
+      const response = await axios.get('/api/user/profile');
       setUser (response.data);
     } catch (error) {
       console.error('Get me failed:', error);
