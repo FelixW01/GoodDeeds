@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 const dualInfoCard = () => {
     return (
         <>
-            <div className='flex flex-col xl:flex-row justify-center'>
-                <div className=' w-full h-fit xl:w-4/12 bg-gray-100 xl:rounded-l-lg p-10'>
+            <div className='flex flex-col xl:flex-row justify-center h-fit'>
+                <div className=' w-full xl:w-4/12 bg-gray-100 xl:rounded-l-lg p-10'>
                     <div className='flex flex-col gap-4 mb-12'>
                         <h2 className='font-bold'>Want to volunteer?</h2>
                         <h1 className='text-4xl font-bold'>Why volunteers love us</h1>
@@ -33,7 +33,7 @@ const dualInfoCard = () => {
                         </Link>
                     </div>
                 </div>
-                <div className='h-fit w-full xl:w-4/12 bg-[#5F477E] xl:rounded-r-lg p-10 text-white'>
+                <div className='w-full xl:w-4/12 bg-[#5F477E] xl:rounded-r-lg p-10 text-white'>
                     <div className='flex flex-col gap-4 mb-12'>
                         <h2 className='font-bold'>Need volunteers?</h2>
                         <h1 className='text-4xl font-bold'>Why organizations love us</h1>
@@ -58,7 +58,7 @@ const dualInfoCard = () => {
                     </div>
                     <div className='flex justify-end mt-12'>
                         <Link to="/signup">
-                            <button className='btn'>Sign Up</button>
+                            <button className='btn shadow-none'>Sign Up</button>
                         </Link>
                     </div>
                 </div>

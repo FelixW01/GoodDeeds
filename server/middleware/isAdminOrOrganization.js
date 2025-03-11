@@ -1,8 +1,8 @@
 const jwt = require('jsonwebtoken');
 
 const isAdminOrOrganization = (req, res, next) => {
-    // Get the token from the Authorization header
-    const token = req.headers.authorization?.split(' ')[1]; // Format: "Bearer <token>"
+    // Get the token from the cookie
+    const token = req.cookies.token;
 
     if (!token) {
         return res.status(401).json({ message: 'No token provided' });
