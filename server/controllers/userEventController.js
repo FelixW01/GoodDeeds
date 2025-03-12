@@ -56,7 +56,11 @@ const getUserEventsByUserId = async (req, res) => {
     try {
         // Query the database for all user-events associated with the authenticated user
         const [userEvents] = await connection.query(
-            'SELECT * FROM user_events WHERE user_id = ?',
+            `SELECT e.title, e.description, e.location, e.start_date, o.contact_email 
+             FROM user_events ue
+             JOIN events e ON ue.event_id = e.event_id
+             JOIN organizations o ON e.org_id = o.org_id
+             WHERE ue.user_id = ?`,
             [userId]
         );
 
@@ -77,7 +81,7 @@ const getUserEventsByUserId = async (req, res) => {
 
 // Get user-event relationship by ID
 const getUserEventById = async (req, res) => {
-    const { user_event_id } = req.body; // Get user_event_id from the request body
+    const { user_event_id } = req.body; 
     const connection = await pool.getConnection();
     try {
         const [userEvent] = await connection.query('SELECT * FROM user_events WHERE user_event_id = ?', [user_event_id]);
