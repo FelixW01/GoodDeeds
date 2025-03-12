@@ -2,11 +2,11 @@ const pool = require('../db/config.js');
 
 // Create a new event
 const createEvent = async (req, res) => {
-    const { title, description, location, start_date, end_date, requirements } = req.body;
+    const { title, description, location, start_date, start_time, end_date, end_time, requirements } = req.body;
     const userId = req.user.userId; // Get userId from the authenticated user
 
     // Validate required fields
-    if (!title || !description || !location || !start_date || !end_date) {
+    if (!title || !description || !location || !start_date || !start_time || !end_date || !end_time) {
         return res.status(400).json({ message: 'All fields are required' });
     }
 
@@ -22,8 +22,8 @@ const createEvent = async (req, res) => {
 
         // Insert the event into the database
         const [result] = await connection.query(
-            'INSERT INTO events (org_id, title, description, location, start_date, end_date, requirements) VALUES (?, ?, ?, ?, ?, ?, ?)',
-            [orgId, title, description, location, start_date, end_date, requirements]
+            'INSERT INTO events (org_id, title, description, location, start_date, start_time, end_date, end_time, requirements) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [orgId, title, description, location, start_date, start_time, end_date, end_time, requirements]
         );
 
         res.status(201).json({
@@ -35,7 +35,9 @@ const createEvent = async (req, res) => {
                 description,
                 location,
                 start_date,
+                start_time,
                 end_date,
+                end_time,
                 requirements,
             },
         });
@@ -59,7 +61,9 @@ const getAllEvents = async (req, res) => {
                 events.description,
                 events.location,
                 events.start_date,
+                events.start_time,
                 events.end_date,
+                events.end_time,
                 events.requirements,
                 events.status,
                 events.created_at,
@@ -108,7 +112,7 @@ const getEventById = async (req, res) => {
 
 // Update an event
 const updateEvent = async (req, res) => {
-    const { event_id, title, description, location, start_date, end_date, requirements } = req.body; // Get data from the request body
+    const { event_id, title, description, location, start_date, start_time, end_date, end_time, requirements } = req.body; // Get data from the request body
     const userId = req.user.userId; // Get userId from the authenticated user
 
     const connection = await pool.getConnection();
@@ -133,8 +137,8 @@ const updateEvent = async (req, res) => {
 
         // Update the event
         const [result] = await connection.query(
-            'UPDATE events SET title = ?, description = ?, location = ?, start_date = ?, end_date = ?, requirements = ? WHERE event_id = ?',
-            [title, description, location, start_date, end_date, requirements, event_id]
+            'UPDATE events SET title = ?, description = ?, location = ?, start_date = ?, start_time = ?, end_date = ?, end_time = ?, requirements = ? WHERE event_id = ?',
+            [title, description, location, start_date, start_time, end_date, end_time, requirements, event_id]
         );
 
         if (result.affectedRows === 0) {
@@ -212,7 +216,9 @@ const getEventsByOrganization = async (req, res) => {
                 events.description,
                 events.location,
                 events.start_date,
+                events.start_time,
                 events.end_date,
+                events.end_time,
                 events.requirements,
                 events.status,
                 events.created_at,
