@@ -28,6 +28,7 @@ const {
     getEventById,
     updateEvent,
     deleteEvent,
+    getEventsByOrganization
 } = require('../../controllers/eventController');
 
 const {
@@ -62,6 +63,7 @@ router.get('/events/all', getAllEvents); // Public route to get all events
 router.get('/events/get', getEventById); // Public route to get event by ID
 router.put('/events/update', isAdminOrOrganization, updateEvent); // Only authenticated users can update events
 router.delete('/events/delete', isAdminOrOrganization, deleteEvent); // Only authenticated users can delete events
+router.get('/events/org/get', isAdminOrOrganization, getEventsByOrganization); // Only authenticated users can get organization events
 
 // User Event Routes
 router.post('/user-events/register', isAdminOrUser, registerUserForEvent); // Only authenticated users can register for events

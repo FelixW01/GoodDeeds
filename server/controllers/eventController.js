@@ -51,8 +51,34 @@ const createEvent = async (req, res) => {
 const getAllEvents = async (req, res) => {
     const connection = await pool.getConnection();
     try {
-        const [events] = await connection.query('SELECT * FROM events');
-        res.json(events);
+        // Query to fetch all events with organization details
+        const [events] = await connection.query(`
+            SELECT 
+                events.event_id,
+                events.title,
+                events.description,
+                events.location,
+                events.start_date,
+                events.end_date,
+                events.requirements,
+                events.status,
+                events.created_at,
+                events.updated_at,
+                organizations.org_id,
+                organizations.name AS org_name,
+                organizations.description AS org_description,
+                organizations.logo AS org_logo,
+                organizations.website AS org_website,
+                organizations.contact_email AS org_contact_email
+            FROM 
+                events
+            JOIN 
+                organizations 
+            ON 
+                events.org_id = organizations.org_id;
+        `);
+
+        res.json(events); // Return the events with organization details
     } catch (err) {
         console.error('Error fetching events:', err);
         res.status(500).json({ message: 'Error fetching events' });
@@ -164,10 +190,64 @@ const deleteEvent = async (req, res) => {
     }
 };
 
+// Get events for the organization associated with the authenticated user
+const getEventsByOrganization = async (req, res) => {
+    const userId = req.user.userId; // Get userId from the authenticated user
+
+    const connection = await pool.getConnection();
+    try {
+        // Fetch the organization ID linked to the authenticated user
+        const [org] = await connection.query('SELECT org_id FROM organizations WHERE user_id = ?', [userId]);
+        if (org.length === 0) {
+            return res.status(403).json({ message: 'Access denied. User is not associated with an organization.' });
+        }
+
+        const orgId = org[0].org_id;
+
+        // Fetch all events for the organization
+        const [events] = await connection.query(
+            `SELECT 
+                events.event_id,
+                events.title,
+                events.description,
+                events.location,
+                events.start_date,
+                events.end_date,
+                events.requirements,
+                events.status,
+                events.created_at,
+                events.updated_at,
+                organizations.org_id,
+                organizations.name AS org_name,
+                organizations.description AS org_description,
+                organizations.logo AS org_logo,
+                organizations.website AS org_website,
+                organizations.contact_email AS org_contact_email
+            FROM 
+                events
+            JOIN 
+                organizations 
+            ON 
+                events.org_id = organizations.org_id
+            WHERE 
+                events.org_id = ?`,
+            [orgId]
+        );
+
+        res.json(events); // Return the events for the organization
+    } catch (err) {
+        console.error('Error fetching events by organization:', err);
+        res.status(500).json({ message: 'Error fetching events by organization' });
+    } finally {
+        connection.release();
+    }
+};
+
 module.exports = {
     createEvent,
     getAllEvents,
     getEventById,
     updateEvent,
     deleteEvent,
+    getEventsByOrganization
 };
