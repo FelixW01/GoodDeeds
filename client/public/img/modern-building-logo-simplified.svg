@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Main circle -->
+  <circle cx="100" cy="100" r="90" fill="#5F477E" />
+  
+  <!-- Inner circle -->
+  <circle cx="100" cy="100" r="80" fill="white" stroke="#5F477E" stroke-width="2" />
+  
+  <!-- Modern building structure - moved slightly higher since roof line is removed -->
+  <rect x="60" y="60" width="80" height="75" fill="#5F477E" rx="2" />
+  
+  <!-- White window grid - horizontal rows -->
+  <rect x="65" y="67" width="70" height="6" fill="white" />
+  <rect x="65" y="79" width="70" height="6" fill="white" />
+  <rect x="65" y="91" width="70" height="6" fill="white" />
+  <rect x="65" y="103" width="70" height="6" fill="white" />
+  <rect x="65" y="115" width="70" height="6" fill="white" />
+  
+  <!-- Building structure vertical separators -->
+  <rect x="76" y="67" width="4" height="54" fill="#5F477E" />
+  <rect x="98" y="67" width="4" height="54" fill="#5F477E" />
+  <rect x="120" y="67" width="4" height="54" fill="#5F477E" />
+  
+  <!-- Modern entrance -->
+  <rect x="87" y="115" width="26" height="20" fill="#5F477E" />
+  <rect x="92" y="117" width="16" height="18" fill="white" />
+</svg>
