@@ -15,7 +15,7 @@ function DashboardPage() {
 
   return (
       <section className="flex flex-col items-center justify-center min-h-screen bg-white">
-        <div className="w-[80%] flex flex-col items-center justify-center py-10">
+        <div className="w-[90%] l:w-[90%] xl:w-[80%] flex flex-col items-center justify-center py-10">
           <div className='lg:min-w-full max-w-[80%]'>
           <div role="tablist" className="tabs tabs-lift justify-start">
             <a
@@ -41,7 +41,9 @@ function DashboardPage() {
               )
             })}
           </div>
-            {activeTab === 1 ? <DashboardCards /> : null}
+            <div className="min-h-full">
+              {activeTab === 1 ? <DashboardCards /> : null}
+            </div>
           </div>
       </div>
     </section>

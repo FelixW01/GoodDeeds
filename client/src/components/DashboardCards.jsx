@@ -55,75 +55,94 @@ function DashboardCards() {
     location: 'Rock Hill, SC',
     date: '2022-11-20',
     time: '9:00 AM'
+  },{
+    name: 'Plasma drive',
+    location: 'Rock Hill, SC',
+    date: '2022-11-20',
+    time: '9:00 AM'
   }]
   
   return (
     <>
-        <div className="flex flex-col lg:flex-row justify-center items-center my-10 gap-10">
+        <div className="flex flex-col lg:flex-row justify-center items-center my-10 gap-10 lg:h-80 xl:h-3/4"> 
+  
             {/* Line graph */}
-            <div className="w-[90%] lg:w-1/2 h-full">
-                <h1 className="text-2xl font-bold my-5">Volunteer Stats</h1>
-                <Line data={data} options={options} />
+            <div className="card card-border flex-1 h-full w-full lg:max-w-[50%]"> 
+              <div className="card-body rounded-lg h-full">
+                <h2 className="card-title">Volunteer Stats</h2>
+                <Line data={data} options={options} className="h-full" /> 
+              </div>
             </div>
+            
             {/* Upcoming event table  */}  
-              <div className='lg:w-1/2 h-full'>
-              <h1 className="text-2xl font-bold my-5">Upcoming Events</h1>
-                <div className="overflow-x-auto">
-                  <table className="table">
-                    <thead>
-                      <tr>
-                        <th>Event</th>
-                        <th>Location</th>
-                        <th>Date</th>
-                        <th>Time</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {mockEvents.map((event) => {
-                        return (
-                          <tr className="hover:bg-base-300">
-                            <td>{event.name}</td>
-                            <td>{event.location}</td>
-                            <td>{event.date}</td>
-                            <td>{event.time}</td>
-                          </tr>
-                        )
-                      })}     
-                    </tbody>
-                  </table>
+            <div className="card card-border flex-1 h-full w-full lg:max-w-[50%]"> 
+              <div className="card-body bg-base-300 rounded-lg h-full">
+                <h2 className="card-title">Upcoming Events</h2>
+                <div className='h-full'>
+                  <div className="overflow-x-auto h-full overflow-y-auto max-h-[400px]">
+                    <table className="table table-auto w-full">
+                      <thead>
+                        <tr>
+                          <th>Event</th>
+                          <th>Location</th>
+                          <th>Date</th>
+                          <th>Time</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {mockEvents.map((event) => {
+                          return (
+                            <tr className="hover:bg-gray-200" key={event.id}>
+                              <td>{event.name}</td>
+                              <td>{event.location}</td>
+                              <td>{event.date}</td>
+                              <td>{event.time}</td>
+                            </tr>
+                          )
+                        })}     
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
-            {/* Volunteer table */}
-            <div className="my-10">
-            <h1 className="text-2xl font-bold my-5">Event Volunteers</h1>
-              <div className="overflow-x-auto">
-                <table className="table table-xs">
-                  <thead>
-                    <tr>
-                      <th></th>
-                      <th>Volunteer name</th>
-                      <th>Email</th>
-                      <th>Event</th>
-                      <th>location</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                  {mockUsers.map((user, index) => {
-                    return (
-                      <tr key={index}>
-                        <th>{index + 1}</th>
-                        <td>{user.name}</td>
-                        <td>{user.email}</td>
-                        <td>{user.event}</td>
-                        <td>{user.location}</td>
-                      </tr>
-                    )
-                  })}
-                  </tbody>
-                </table>
+            
+          </div>
+          
+          {/* Volunteer table */}
+          <div className="card card-border h-full w-full ">
+              <div className="card-body bg-base-300 rounded-lg">
+                <h2 className="card-title">Volunteers Info</h2>
+                <div className="my-10 bg-base-300">
+                    <div className="overflow-x-auto overflow-y-auto">
+                      <table className="table table-xs">
+                        <thead>
+                          <tr>
+                            <th></th>
+                            <th>Volunteer name</th>
+                            <th>Email</th>
+                            <th>Event</th>
+                            <th>location</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        {mockUsers.map((user, index) => {
+                          return (
+                            <tr key={index}>
+                              <th>{index + 1}</th>
+                              <td>{user.name}</td>
+                              <td>{user.email}</td>
+                              <td>{user.event}</td>
+                              <td>{user.location}</td>
+                            </tr>
+                          )
+                        })}
+                        </tbody>
+                      </table>
+                    </div>
               </div>
-        </div>
+              </div>
+            </div>
     </>
   )
 }
