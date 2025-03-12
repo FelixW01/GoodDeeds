@@ -32,9 +32,12 @@ function Navbar() {
             <ul
                 tabIndex={0}
                 className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow text-black">
+                <li><Link to="/listing">Events</Link></li>
+                {isLoggedIn ? <li><Link to="/dashboard">Dashboard</Link></li> : 
+                <> 
                 <li><Link to="/signuporg">For Organizations</Link></li>
                 <li><Link to="/signup">For Volunteers</Link></li>
-                <li><Link to="/listing">Events</Link></li>
+                </>}
             </ul>
             </div>
         </div>
@@ -48,15 +51,36 @@ function Navbar() {
             </Link>
         </div>
         <div className="navbar-end">
-            <button className="btn btn-ghost btn-circle text-xl transition duration-300 ease-in-out hover:bg-purple-950 hover: text-white hover:shadow-md border-none">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /> </svg>
-            </button>
-            <button className="btn btn-ghost btn-circle text-xl transition duration-300 ease-in-out hover:bg-purple-950 hover: text-white hover:shadow-md border-none">
-            <div className="indicator">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /> </svg>
-                <span className="badge badge-xs badge-primary indicator-item"></span>
-            </div>
-            </button>
+
+         {isLoggedIn ? 
+         <div className="flex gap-2">
+          <div className="dropdown dropdown-end">
+              <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
+                  <div className="w-10 rounded-full">
+                      <img
+                          alt="Tailwind CSS Navbar component"
+                          src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"/>
+                  </div>
+              </div>
+              <ul
+                  tabIndex={0}
+                  className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow text-black">
+                  <li>
+                      <a className="justify-between">
+                          Profile
+                      </a>
+                  </li>
+                  <li onClick={handleLogOut}><a>Logout</a></li>
+              </ul>
+          </div>
+      </div>
+        :
+        <button className="btn btn-ghost btn-circle text-xl transition duration-300 ease-in-out hover:bg-purple-950 hover: text-white hover:shadow-md border-none">
+            <Link to="/login">
+                <i class="fa-solid fa-arrow-right-to-bracket"></i>
+            </Link>
+        </button>}
+
         </div>
       </div>
       
@@ -71,8 +95,13 @@ function Navbar() {
               </div>
               <div className="flex gap-4">
                 <button className="border-0 btn btn-ghost transition duration-300 ease-in-out hover:bg-purple-950 hover: text-white hover:shadow-md"><Link to="/listing">Events</Link></button>
-                <button className="border-0 btn btn-ghost transition duration-300 ease-in-out hover:bg-purple-950 hover: text-white hover:shadow-md"><Link to="/signuporg">For Organizations</Link></button>
+                {isLoggedIn ? 
+                <button className="border-0 btn btn-ghost transition duration-300 ease-in-out hover:bg-purple-950 hover: text-white hover:shadow-md"><Link to="/dashboard">Dashboard</Link></button> 
+                :
+                <>
+                < button className="border-0 btn btn-ghost transition duration-300 ease-in-out hover:bg-purple-950 hover: text-white hover:shadow-md"><Link to="/signuporg">For Organizations</Link></button>
                 <button className="border-0 btn btn-ghost transition duration-300 ease-in-out hover:bg-purple-950 hover: text-white hover:shadow-md"><Link to="/signup">For Volunteers</Link></button>
+                </>}
               </div>
             {isLoggedIn ?
             <div className="flex gap-2">
@@ -90,10 +119,8 @@ function Navbar() {
                         <li>
                             <a className="justify-between">
                                 Profile
-                                <span className="badge">New</span>
                             </a>
                         </li>
-                        <li><a>Settings</a></li>
                         <li onClick={handleLogOut}><a>Logout</a></li>
                     </ul>
                 </div>

@@ -28,15 +28,10 @@ const UserProvider = ({ children }) => {
   }
 
   const login = async (userData) => {
-    try {
       const response = await axios.post('/api/login', userData);
       setUser (response.data);
       setError(null);
       toast.success(`Welcome, ${capitalize(response.data.first_name)} ${capitalize(response.data.last_name)} `)
-    } catch (error) {
-      console.error('Login failed:', error);
-      setError(error.response?.data?.message || 'Login failed. Please try again.');
-    }
   };
 
   const logout = async () => {
