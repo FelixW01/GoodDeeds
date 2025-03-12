@@ -1,4 +1,10 @@
-const FilterEvents = ({ onSortChange, onMonthFilter, onTimeFilter }) => {
+// FilterEvents.js
+import React from 'react';
+import { useEventContext } from '../../context/eventContext';
+
+const FilterEvents = () => {
+    const { handleSortChange, handleMonthFilter, handleTimeFilter } = useEventContext();
+
     return (
         <div className="flex flex-wrap gap-4 p-4 bg-base-200 rounded-lg mb-6">
             {/* Sort Dropdown */}
@@ -8,7 +14,7 @@ const FilterEvents = ({ onSortChange, onMonthFilter, onTimeFilter }) => {
                 </label>
                 <select
                     className="select select-bordered"
-                    onChange={(e) => onSortChange(e.target.value)}
+                    onChange={(e) => handleSortChange(e.target.value)}
                 >
                     <option value="newest">Newest to Oldest</option>
                     <option value="oldest">Oldest to Newest</option>
@@ -22,7 +28,7 @@ const FilterEvents = ({ onSortChange, onMonthFilter, onTimeFilter }) => {
                 </label>
                 <select
                     className="select select-bordered"
-                    onChange={(e) => onMonthFilter(e.target.value)}
+                    onChange={(e) => handleMonthFilter(e.target.value)}
                 >
                     <option value="">All Months</option>
                     <option value="01">January</option>
@@ -47,7 +53,7 @@ const FilterEvents = ({ onSortChange, onMonthFilter, onTimeFilter }) => {
                 </label>
                 <select
                     className="select select-bordered"
-                    onChange={(e) => onTimeFilter(e.target.value)}
+                    onChange={(e) => handleTimeFilter(e.target.value)}
                 >
                     <option value="">All Times</option>
                     <option value="morning">Morning (6 AM - 12 PM)</option>
