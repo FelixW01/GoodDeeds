@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useState, useContext } from 'react';
 import { UserContext } from '../../context/userContext';
+import toast from 'react-hot-toast';
 
 function LoginCard() {
   const [formData, setFormData] = useState({
@@ -10,7 +11,7 @@ function LoginCard() {
 
   const navigate = useNavigate();
 
-  const { login, error, user } = useContext(UserContext); 
+  const { login, error } = useContext(UserContext); 
 
   const handleChange = (e) => {
     setFormData({
@@ -23,9 +24,10 @@ function LoginCard() {
     e.preventDefault();
     try {
       await login(formData);
-      navigate('/');
+      navigate('/dashboard');
     } catch (err) {
       console.error('Error creating organization account:', err.response?.data || err.message);
+      toast.error(err.response?.data?.message || err.message);
     }
   };
 
