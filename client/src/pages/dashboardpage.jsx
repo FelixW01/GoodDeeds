@@ -31,7 +31,7 @@ function DashboardPage() {
               className={`tab ${activeTab === 2 ? "tab-active" : ""}`}
               onClick={() => handleTabClick(2)}
             >
-              Post Event
+              Create Event
             </a>
           </div>
           <div className="flex flex-row justify-center gap-10 mt-10 lg:justify-start">

@@ -76,9 +76,9 @@ function DashboardCards() {
             
             {/* Upcoming event table  */}  
             <div className="card card-border flex-1 h-full w-full lg:max-w-[50%]"> 
-              <div className="card-body bg-base-300 rounded-lg h-full">
+              <div className="card-body bg-base-300 rounded-lg h-full bg-gradient-to-r from-[#F7F7F7] to-[#E5D8F5]">
                 <h2 className="card-title">Upcoming Events</h2>
-                <div className='h-full'>
+                <div className='h-full overflow-y-hidden'>
                   <div className="overflow-x-auto h-full overflow-y-auto max-h-[400px]">
                     <table className="table table-auto w-full">
                       <thead>
@@ -111,9 +111,9 @@ function DashboardCards() {
           
           {/* Volunteer table */}
           <div className="card card-border h-full w-full ">
-              <div className="card-body bg-base-300 rounded-lg">
+              <div className="card-body bg-base-300 rounded-lg bg-gradient-to-r from-[#F7F7F7] to-[#E5D8F5]">
                 <h2 className="card-title">Volunteers Info</h2>
-                <div className="my-10 bg-base-300">
+                <div className="my-10 bg-base-300 bg-gradient-to-r from-[#F7F7F7] to-[#E5D8F5]">
                     <div className="overflow-x-auto overflow-y-auto">
                       <table className="table table-xs">
                         <thead>
