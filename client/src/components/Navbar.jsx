@@ -1,11 +1,12 @@
 import { useState, useContext, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from '../../context/userContext';
 import { toast } from 'react-hot-toast';
 
 function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const { user, logout } = useContext(UserContext); 
+  const navigate = useNavigate();
 
   useEffect(() => {
     user ? setIsLoggedIn(true) : setIsLoggedIn(false);
@@ -15,6 +16,7 @@ function Navbar() {
     try {
       await logout();
       setIsLoggedIn(false);
+      navigate('/');
       toast.success(`Successfully logged out.} `)
     }
     catch (err) {

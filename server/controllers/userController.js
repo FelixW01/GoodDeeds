@@ -91,13 +91,13 @@ const getUserProfile = async (req, res) => {
 
     const connection = await pool.getConnection();
     try {
-        const [result] = await connection.query('SELECT user_id, email, first_name, last_name, profile_picture, role FROM users WHERE user_id = ?', [userId]);
+        const [result] = await connection.query('SELECT first_name, last_name, profile_picture, role FROM users WHERE user_id = ?', [userId]);
         if (result.length === 0) {
             return res.status(404).json({ message: 'User  not found' });
         }
 
         // Return the user profile information
-        res.json(result[0]); // Return the first row
+        res.json(result[0]);
     } catch (err) {
         console.error('Error fetching user profile:', err);
         res.status(500).json({ message: 'Error fetching user profile' });

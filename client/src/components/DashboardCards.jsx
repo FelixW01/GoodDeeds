@@ -1,7 +1,8 @@
 import Chart from 'chart.js/auto'
 import { Line } from "react-chartjs-2";
 
-function DashboardCards() {
+
+function DashboardCards({user}) {
   const data = {
     labels: ["Jan", "Feb", "Mar", "Apr", "May"],
     datasets: [
@@ -62,6 +63,8 @@ function DashboardCards() {
     time: '9:00 AM'
   }]
   
+
+
   return (
     <>
         <div className="flex flex-col lg:flex-row justify-center items-center my-10 gap-10 lg:h-80 xl:h-3/4"> 
@@ -90,9 +93,9 @@ function DashboardCards() {
                         </tr>
                       </thead>
                       <tbody>
-                        {mockEvents.map((event) => {
+                        {mockEvents.map((event, index) => {
                           return (
-                            <tr className="hover:bg-gray-200" key={event.id}>
+                            <tr className="hover:bg-gray-200" key={index}>
                               <td>{event.name}</td>
                               <td>{event.location}</td>
                               <td>{event.date}</td>
