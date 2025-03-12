@@ -54,7 +54,7 @@ function Navbar() {
 
          {isLoggedIn ? 
          <div className="flex gap-2">
-          <div className="dropdown dropdown-end">
+          <div className="dropdown dropdown-end flex-row">
               <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
                   <div className="w-10 rounded-full">
                       <img
@@ -77,7 +77,7 @@ function Navbar() {
         :
         <button className="btn btn-ghost btn-circle text-xl transition duration-300 ease-in-out hover:bg-purple-950 hover: text-white hover:shadow-md border-none">
             <Link to="/login">
-                <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                <i className="fa-solid fa-arrow-right-to-bracket"></i>
             </Link>
         </button>}
 
@@ -99,7 +99,7 @@ function Navbar() {
                 <button className="border-0 btn btn-ghost transition duration-300 ease-in-out hover:bg-purple-950 hover: text-white hover:shadow-md"><Link to="/dashboard">Dashboard</Link></button> 
                 :
                 <>
-                < button className="border-0 btn btn-ghost transition duration-300 ease-in-out hover:bg-purple-950 hover: text-white hover:shadow-md"><Link to="/signuporg">For Organizations</Link></button>
+                <button className="border-0 btn btn-ghost transition duration-300 ease-in-out hover:bg-purple-950 hover: text-white hover:shadow-md"><Link to="/signuporg">For Organizations</Link></button>
                 <button className="border-0 btn btn-ghost transition duration-300 ease-in-out hover:bg-purple-950 hover: text-white hover:shadow-md"><Link to="/signup">For Volunteers</Link></button>
                 </>}
               </div>
