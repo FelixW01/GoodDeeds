@@ -211,7 +211,6 @@ const getEventsByOrganization = async (req, res) => {
         // Fetch all events for the organization
         const [events] = await connection.query(
             `SELECT 
-                events.event_id,
                 events.title,
                 events.description,
                 events.location,
@@ -221,14 +220,9 @@ const getEventsByOrganization = async (req, res) => {
                 events.end_time,
                 events.requirements,
                 events.status,
-                events.created_at,
-                events.updated_at,
-                organizations.org_id,
                 organizations.name AS org_name,
-                organizations.description AS org_description,
                 organizations.logo AS org_logo,
-                organizations.website AS org_website,
-                organizations.contact_email AS org_contact_email
+                organizations.website AS org_website
             FROM 
                 events
             JOIN 
@@ -240,7 +234,7 @@ const getEventsByOrganization = async (req, res) => {
             [orgId]
         );
 
-        res.json(events); // Return the events for the organization
+        res.json(events);
     } catch (err) {
         console.error('Error fetching events by organization:', err);
         res.status(500).json({ message: 'Error fetching events by organization' });

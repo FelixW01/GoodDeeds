@@ -12,6 +12,7 @@ const UserProvider = ({ children }) => {
     if (!word) return '';
     return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
   }
+  
   const formatTime = (time) => {
     const [hours, minutes] = time.split(":");
     const formattedHours = (hours % 12) || 12;

@@ -25,11 +25,11 @@ function DashboardCards({user, formatTime}) {
     labels: getMonthLabels(),
     datasets: [
       {
-        label: "Volunteers",
+        label: user.role === "organization" ? "Volunteers" : "Volunteer Hours",
         data: [5, 10, 20, 10, 25],
-        borderColor: "#4A90E2",
-        backgroundColor: "rgba(74, 144, 226, 0.5)",
-      },
+        borderColor: "#BFDBF7",
+        backgroundColor: "#BFDBF7",
+      },  
     ],
   };
 
@@ -84,6 +84,18 @@ function DashboardCards({user, formatTime}) {
   
   const [userEvents, setUserEvents] = useState([]);
   const [upcomingEvents, setUpcomingEvents] = useState([]);
+  const [organizationEvents, setOrganizationEvents] = useState([]);
+  const [upcomingOrganizationEvents, setUpcomingOrganizationEvents] = useState([]);
+
+  const getOrganization = async () => {
+      try {
+          const response = await axios.get('/api/events/org/get');
+          // console.log('User  Events:', response.data);
+          setOrganizationEvents(response.data);
+      } catch (error) {
+          console.error('Error fetching user events:', error);
+      }
+  };
 
   const getUserEvents = async () => {
       try {
@@ -97,34 +109,47 @@ function DashboardCards({user, formatTime}) {
 
   const getUpcomingEvents = async () => {
     try {
-      const today = new Date();
-      const twoWeeksFromNow = new Date(today);
-      // Add 14 days for 2 weeks
-      twoWeeksFromNow.setDate(today.getDate() + 14);
+        const today = new Date();
+        const twoWeeksFromNow = new Date(today);
+        // Add 14 days for 2 weeks
+        twoWeeksFromNow.setDate(today.getDate() + 14);
 
-      // Filter the events that are within 2 weeks from today
-      const filteredUpcomingEvents = userEvents.filter(event => {
-        const eventStartDate = new Date(event.start_date);
-        return eventStartDate >= today && eventStartDate <= twoWeeksFromNow;
-      });
+        let filteredUpcomingEvents = [];
 
-      setUpcomingEvents(filteredUpcomingEvents);
-    } catch (error) {
-      console.error('Error fetching upcoming events for user:', error);
-    }
+        if (user.role === 'organization') {
+            // Filter organization events if role is 'organization'
+            filteredUpcomingEvents = organizationEvents.filter(event => {
+                const eventStartDate = new Date(event.start_date);
+                return eventStartDate >= today && eventStartDate <= twoWeeksFromNow;
+            });
+            setUpcomingOrganizationEvents(filteredUpcomingEvents);
+        } else {
+            // Filter user events if role is not 'organization'
+            filteredUpcomingEvents = userEvents.filter(event => {
+                const eventStartDate = new Date(event.start_date);
+                return eventStartDate >= today && eventStartDate <= twoWeeksFromNow;
+            });
+            setUpcomingEvents(filteredUpcomingEvents);
+        }
+      } catch (error) {
+          console.error('Error fetching upcoming events:', error);
+      }
   };
 
   useEffect(() => {
-    getUserEvents();
+    user.role === 'organization' ? getOrganization() : getUserEvents();
   },[user])
 
   useEffect(() => {
-    if (userEvents.length > 0) { 
+    if (organizationEvents.length > 0 || userEvents.length > 0) {
         getUpcomingEvents();
-    }
-}, [userEvents]);
+    } 
+}, [userEvents, organizationEvents]);
 
-  upcomingEvents ? console.log(upcomingEvents, '<< upcoming events') : null;
+  // upcomingEvents ? console.log(upcomingEvents, '<< upcoming events') : null;
+  // upcomingOrganizationEvents ? console.log(upcomingOrganizationEvents, '<< upcoming organization events') : null;
+  organizationEvents ? console.log(organizationEvents, '<< organization events') : null;
+  
   return (
     <>
         <div className="flex flex-col lg:flex-row justify-center items-center my-10 gap-10 lg:h-80 xl:h-3/4"> 
@@ -132,7 +157,7 @@ function DashboardCards({user, formatTime}) {
             {/* Line graph */}
             <div className="card card-border flex-1 h-full w-full lg:max-w-[50%]"> 
               <div className="card-body rounded-lg h-full">
-                <h2 className="card-title">Volunteer Hours</h2>
+                <h2 className="card-title">{user.role === 'user' ? 'Volunteer Hours' : 'Volunteer Statistics'}</h2>
                 <Line data={data} options={options} className="h-full" /> 
               </div>
             </div>
@@ -153,16 +178,36 @@ function DashboardCards({user, formatTime}) {
                         </tr>
                       </thead>
                       <tbody>
-                        {upcomingEvents.length > 0 ? upcomingEvents.map((event, index) => {
-                          return (
-                            <tr className="hover:bg-gray-200" key={index}>
-                              <td>{event.title}</td>
-                              <td>{event.location}</td>
-                              <td>{new Date(event.start_date).toLocaleDateString()}</td>
-                              <td>{formatTime(event.start_time)}</td>
+                        {user.role === "organization" 
+                          ? (upcomingOrganizationEvents.length > 0 ? upcomingOrganizationEvents.map((event, index) => {
+                              return (
+                                <tr className="hover:bg-gradient-to-r from-[#E0E0E0] to-[#D1B8F1] rounded-xl hover:shadow-lg" key={index}>
+                                  <td>{event.title}</td>
+                                  <td>{event.location}</td>
+                                  <td>{new Date(event.start_date).toLocaleDateString()}</td>
+                                  <td>{formatTime(event.start_time)}</td>
+                                </tr>
+                              );
+                            }) : 
+                            <tr>
+                              <td colSpan="4" className="text-center">No upcoming organization events</td>
                             </tr>
                           )
-                        }) : null }     
+                          : (upcomingEvents.length > 0 ? upcomingEvents.map((event, index) => {
+                              return (
+                                <tr className="hover:bg-gradient-to-r from-[#E0E0E0] to-[#D1B8F1] rounded-xl hover:shadow-lg" key={index}>
+                                  <td>{event.title}</td>
+                                  <td>{event.location}</td>
+                                  <td>{new Date(event.start_date).toLocaleDateString()}</td>
+                                  <td>{formatTime(event.start_time)}</td>
+                                </tr>
+                              );
+                            }) : 
+                            <tr>
+                              <td colSpan="4" className="text-center">No upcoming events</td>
+                            </tr>
+                          )
+                        }     
                       </tbody>
                     </table>
                   </div>
@@ -179,32 +224,16 @@ function DashboardCards({user, formatTime}) {
                 <div className="my-10 bg-base-300 bg-gradient-to-r from-[#F7F7F7] to-[#E5D8F5]">
                     <div className="overflow-x-auto overflow-y-auto">
                       <table className="table table-xs">
-                        {user.role === 'organization' ? 
-                        <> 
-                          <thead>
+                        <thead>
+                          {user.role === 'organization' ? (
                             <tr>
                               <th></th>
                               <th>Volunteer name</th>
                               <th>Email</th>
                               <th>Event</th>
-                              <th>location</th>
+                              <th>Location</th>
                             </tr>
-                          </thead>
-                          <tbody>
-                          {mockUsers.map((user, index) => {
-                            return (
-                              <tr key={index}>
-                                <th>{index + 1}</th>
-                                <td>{user.name}</td>
-                                <td>{user.email}</td>
-                                <td>{user.event}</td>
-                                <td>{user.location}</td>
-                              </tr>
-                            )
-                          })}
-                          </tbody> </> : 
-                        <> 
-                          <thead>
+                          ) : (
                             <tr>
                               <th>Event</th>
                               <th>Description</th>
@@ -212,27 +241,36 @@ function DashboardCards({user, formatTime}) {
                               <th>Location</th>
                               <th>Start Date</th>
                             </tr>
-                          </thead>
-                          <tbody>
-                          {userEvents.map((event, index) => {
-                            return (
-                              <tr key={index}>
-                                <td>{event.title}</td>
-                                <td>{event.description}</td>
-                                <td>{event.contact_email}</td>
-                                <td>{event.location}</td>
-                                <td>{new Date(event.start_date).toLocaleDateString()}</td>
-                              </tr>
-                            )
-                          })}
-                          </tbody> 
-                        </>}
+                          )}
+                        </thead>
+                        
+                        <tbody>
+                          {user.role === 'organization' 
+                            ? mockUsers.map((user, index) => (
+                                <tr key={index}>
+                                  <th>{index + 1}</th>
+                                  <td>{user.name}</td>
+                                  <td>{user.email}</td>
+                                  <td>{user.event}</td>
+                                  <td>{user.location}</td>
+                                </tr>
+                              )) 
+                            : userEvents.map((event, index) => (
+                                <tr key={index}>
+                                  <td>{event.title}</td>
+                                  <td>{event.description}</td>
+                                  <td>{event.contact_email}</td>
+                                  <td>{event.location}</td>
+                                  <td>{new Date(event.start_date).toLocaleDateString()}</td>
+                                </tr>
+                              ))}
+                        </tbody>
                       </table>
                     </div>
               </div>
-              </div>
             </div>
-    </>
+        </div>
+     </>
   )
 }
 
