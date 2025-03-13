@@ -11,7 +11,9 @@ const EventCard = ({ event, loading }) => {
                     <div className="skeleton h-4 w-64 mb-2"></div> {/* Description placeholder */}
                     <div className="skeleton h-4 w-56 mb-2"></div> {/* Location placeholder */}
                     <div className="skeleton h-4 w-40 mb-2"></div> {/* Start Date placeholder */}
+                    <div className="skeleton h-4 w-40 mb-2"></div> {/* Start Time placeholder */}
                     <div className="skeleton h-4 w-40 mb-2"></div> {/* End Date placeholder */}
+                    <div className="skeleton h-4 w-40 mb-2"></div> {/* End Time placeholder */}
                     <div className="skeleton h-4 w-32 mb-2"></div> {/* Requirements placeholder */}
                     <div className="skeleton h-4 w-24 mb-2"></div> {/* Status placeholder */}
                     <div className="skeleton h-4 w-48 mb-2"></div> {/* Organization Name placeholder */}
@@ -30,7 +32,9 @@ const EventCard = ({ event, loading }) => {
         description,
         location,
         start_date,
+        start_time,
         end_date,
+        end_time,
         requirements,
         status,
         org_name, // Organization name
@@ -54,7 +58,9 @@ const EventCard = ({ event, loading }) => {
                 <p><strong>Description:</strong> {description}</p>
                 <p><strong>Location:</strong> {location}</p>
                 <p><strong>Start Date:</strong> {new Date(start_date).toLocaleDateString()}</p>
+                <p><strong>Start Time:</strong> {start_time}</p>
                 <p><strong>End Date:</strong> {new Date(end_date).toLocaleDateString()}</p>
+                <p><strong>End Time:</strong> {end_time}</p>
                 <p><strong>Requirements:</strong> {requirements}</p>
                 <p><strong>Status:</strong> {status.toUpperCase()}</p>
                 <p><strong>Organization:</strong> {org_name}</p>
