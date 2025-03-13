@@ -3,7 +3,7 @@ import Chart from 'chart.js/auto'
 import axios from "axios";
 import { useState, useEffect } from "react";
 
-function DashboardCards({user, formatTime}) {
+function DashboardCards({user, formatTime, currentEventView, setEventHeaders}) {
   const getMonthLabels = () => {
   const months = [
     "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
@@ -43,13 +43,20 @@ function DashboardCards({user, formatTime}) {
   const [upcomingEvents, setUpcomingEvents] = useState([]);
   const [organizationEvents, setOrganizationEvents] = useState([]);
   const [upcomingOrganizationEvents, setUpcomingOrganizationEvents] = useState([]);
-  const [currentEventView, setCurrentEventView] = useState("2b783258-ff7c-11ef-87c3-2c41c415193f");
+  
 
   const getOrganization = async () => {
       try {
           const response = await axios.get('/api/events/org/get');
+          const eventHeaders = response.data.map(event => {
+              return {
+                  title: event.title,
+                  id: event.event_id,
+              };
+          });
           // console.log('User  Events:', response.data);
           setOrganizationEvents(response.data);
+          setEventHeaders(eventHeaders);
       } catch (error) {
           console.error('Error fetching user events:', error);
       }
@@ -104,10 +111,6 @@ function DashboardCards({user, formatTime}) {
     } 
 }, [userEvents, organizationEvents]);
 
-  // upcomingEvents ? console.log(upcomingEvents, '<< upcoming events') : null;
-  // upcomingOrganizationEvents ? console.log(upcomingOrganizationEvents, '<< upcoming organization events') : null;
-  organizationEvents ? console.log(organizationEvents, '<< organization events') : null;
-  
   return (
     <>
         <div className="flex flex-col lg:flex-row justify-center items-center my-10 gap-10 lg:h-80 xl:h-3/4"> 

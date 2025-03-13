@@ -17,7 +17,7 @@ function Navbar() {
       await logout();
       setIsLoggedIn(false);
       navigate('/');
-      toast.success(`Successfully logged out.} `)
+      toast.success(`Successfully logged out.`)
     }
     catch (err) {
       console.error('Error logging out:', err);
