@@ -1,7 +1,7 @@
 import { useState, useContext } from "react";
 import DashboardCards from "../components/DashboardCards";
 import { UserContext } from '../../context/userContext';
-
+import CreateEventCard from "../components/CreateEventCard";
 
 function DashboardPage() {
   const [activeTab, setActiveTab] = useState(1);
@@ -42,7 +42,7 @@ function DashboardPage() {
             </a> : null}
           </div>
           { user.role === 'organization' ? <div className="flex flex-row justify-center gap-10 mt-10 lg:justify-start">
-            {eventHeaders.map((event) => {
+            {activeTab === 1 ? eventHeaders.map((event) => {
               const isActive = currentEventView === event.id;
 
               return (
@@ -57,11 +57,14 @@ function DashboardPage() {
                   {event.title}
                 </div>
               );
-            })}
+            }) : null}
 
           </div> : <h1 className="text-3xl font-bold text-gray-800 mb-4 my-10">Welcome, {capitalize(user.first_name)} {capitalize(user.last_name)}</h1>}
             <div className="min-h-full">
-              {activeTab === 1 ? <DashboardCards user={user} formatTime={formatTime} currentEventView={currentEventView} setEventHeaders={setEventHeaders} /> : null}
+              {activeTab === 1 ?
+              <DashboardCards user={user} formatTime={formatTime} currentEventView={currentEventView} setEventHeaders={setEventHeaders} /> 
+              : 
+              <CreateEventCard/>}
             </div>
           </div>
       </div> : <h1>loading . . .</h1>}
