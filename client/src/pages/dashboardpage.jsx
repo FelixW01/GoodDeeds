@@ -15,7 +15,7 @@ function DashboardPage() {
     'img/teamseas.png',
   ]
 
-  const { user, capitalize } = useContext(UserContext); 
+  const { user, capitalize, formatTime } = useContext(UserContext); 
 
   user ? console.log(user) : null;
 
@@ -48,7 +48,7 @@ function DashboardPage() {
             })}
           </div> : <h1 className="text-3xl font-bold text-gray-800 mb-4 my-10">Welcome, {capitalize(user.first_name)} {capitalize(user.last_name)}</h1>}
             <div className="min-h-full">
-              {activeTab === 1 ? <DashboardCards user={user} /> : null}
+              {activeTab === 1 ? <DashboardCards user={user} formatTime={formatTime} /> : null}
             </div>
           </div>
       </div> : <h1>loading . . .</h1>}
