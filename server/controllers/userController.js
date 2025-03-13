@@ -1,6 +1,8 @@
 const pool = require('../db/config.js');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const fs = require('fs');
+const {uploadToCloudinary} = require('../config/cloudinary')
 
 // Create a new user
 const createUser = async (req, res) => {
@@ -109,63 +111,91 @@ const getUserProfile = async (req, res) => {
 // Update a user
 const updateUser = async (req, res) => {
     const userId = req.user.userId; // Get userId from the authenticated user
+    const { email, password, first_name, last_name } = req.body;
 
-    const { email, password, role, first_name, last_name, profile_picture } = req.body;
+    // Profile picture will come from Cloudinary upload
+    let profilePictureUrl = null;
 
-    // Validate email
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (!email || !emailRegex.test(email)) {
-        return res.status(400).json({ message: 'Invalid email' });
+    // Validate email if provided
+    if (email) {
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ message: 'Invalid email' });
+        }
     }
 
-    // Validate password
+    // Validate password if provided
     if (password && password.length < 8) {
         return res.status(400).json({ message: 'Password must be at least 8 characters long' });
     }
 
-    // Validate role
-    if (!role || !['user', 'admin', 'organization'].includes(role)) {
-        return res.status(400).json({ message: 'Invalid role' });
-    }
+    // If file was uploaded, process it
+    if (req.file) {
+        try {
+            // Upload file to Cloudinary
+            profilePictureUrl = await uploadToCloudinary(req.file.path);
 
-    // Validate first name and last name
-    if (!first_name || !last_name) {
-        return res.status(400).json({ message: 'First name and last name are required' });
-    }
-
-    // Validate profile picture
-    if (profile_picture && !profile_picture.startsWith('http')) {
-        return res.status(400).json({ message: 'Invalid profile picture URL' });
+            // Delete the temporary file
+            fs.unlinkSync(req.file.path);
+        } catch (error) {
+            console.error('Error processing profile picture:', error);
+            return res.status(500).json({ message: 'Error processing profile picture' });
+        }
     }
 
     const connection = await pool.getConnection();
     try {
+        // Dynamically build the SQL query based on provided fields
+        let query = 'UPDATE users SET ';
+        const updates = [];
+        const values = [];
+
+        if (email) {
+            updates.push('email = ?');
+            values.push(email);
+        }
+
         if (password) {
             const hashedPassword = await bcrypt.hash(password, 10);
-            const [result] = await connection.query(`
-                UPDATE users
-                SET email = ?, password_hash = ?, role = ?, first_name = ?, last_name = ?, profile_picture = ?
-                WHERE user_id = ?;
-            `, [email, hashedPassword, role, first_name, last_name, profile_picture, userId]);
-
-            if (result.affectedRows === 0) {
-                res.status(404).json({ message: 'User not found' });
-            } else {
-                res.json({ message: 'User updated successfully' });
-            }
-        } else {
-            const [result] = await connection.query(`
-                UPDATE users
-                SET email = ?, role = ?, first_name = ?, last_name = ?, profile_picture = ?
-                WHERE user_id = ?;
-            `, [email, role, first_name, last_name, profile_picture, userId]);
-
-            if (result.affectedRows === 0) {
-                res.status(404).json({ message: 'User not found' });
-            } else {
-                res.json({ message: 'User updated successfully' });
-            }
+            updates.push('password_hash = ?');
+            values.push(hashedPassword);
         }
+
+        if (first_name) {
+            updates.push('first_name = ?');
+            values.push(first_name);
+        }
+
+        if (last_name) {
+            updates.push('last_name = ?');
+            values.push(last_name);
+        }
+
+        if (profilePictureUrl) {
+            updates.push('profile_picture = ?');
+            values.push(profilePictureUrl);
+        }
+
+        // If no fields are provided to update, return an error
+        if (updates.length === 0) {
+            return res.status(400).json({ message: 'No fields provided for update' });
+        }
+
+        // Add the WHERE clause
+        query += updates.join(', ') + ' WHERE user_id = ?';
+        values.push(userId);
+
+        // Execute the query
+        const [result] = await connection.query(query, values);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.json({
+            message: 'User updated successfully',
+            profile_picture: profilePictureUrl || 'No change' // Return the new profile picture URL if updated
+        });
     } catch (err) {
         console.error('Error updating user:', err);
         res.status(500).json({ message: 'Error updating user' });
