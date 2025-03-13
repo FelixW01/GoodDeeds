@@ -211,6 +211,7 @@ const getEventsByOrganization = async (req, res) => {
         // Fetch all events for the organization
         const [events] = await connection.query(
             `SELECT 
+                events.event_id,
                 events.title,
                 events.description,
                 events.location,
@@ -222,19 +223,31 @@ const getEventsByOrganization = async (req, res) => {
                 events.status,
                 organizations.name AS org_name,
                 organizations.logo AS org_logo,
-                organizations.website AS org_website
+                organizations.website AS org_website,
+                GROUP_CONCAT(CONCAT(users.first_name, ' ', users.last_name) SEPARATOR ', ') AS volunteer_names,
+                GROUP_CONCAT(users.email SEPARATOR ', ') AS volunteer_emails
             FROM 
                 events
             JOIN 
-                organizations 
-            ON 
-                events.org_id = organizations.org_id
+                organizations ON events.org_id = organizations.org_id
+            LEFT JOIN 
+                user_events ON events.event_id = user_events.event_id
+            LEFT JOIN 
+                users ON user_events.user_id = users.user_id
             WHERE 
-                events.org_id = ?`,
+                events.org_id = ?
+            GROUP BY 
+                events.event_id`,
             [orgId]
         );
+        
+        const processedEvents = events.map(event => ({
+            ...event,
+            volunteer_names: event.volunteer_names ? event.volunteer_names.split(', ') : [],
+            volunteer_emails: event.volunteer_emails ? event.volunteer_emails.split(', ') : []
+        }));
 
-        res.json(events);
+        res.json(processedEvents);
     } catch (err) {
         console.error('Error fetching events by organization:', err);
         res.status(500).json({ message: 'Error fetching events by organization' });

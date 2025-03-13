@@ -37,55 +37,13 @@ function DashboardCards({user, formatTime}) {
     responsive: true,
   };
 
-
-  const mockUsers = [{
-    name: 'Felix Willem',
-    email: 'felix1@yahoo.com',
-    event: 'Charity event',
-    location: 'Charlotte, NC'
-  }, { 
-    name: 'Sean Pichay',
-    email: 'SeanP@gmail.com',
-    event: 'Food drive', 
-    location: 'Fort Mill, SC' 
-  }, {
-    name: 'Jenny Kim',
-    email: 'jenny@hotmail.com',
-    event: 'Blood drive',
-    location: 'Rock Hill, SC'
-  }, {
-    name: 'Walter White',
-    email: 'heisenberg@gmail.com',
-    event: 'Charity event',
-    location: 'Charlotte, NC'
-  }]
-
-  const mockEvents = [{
-    name: 'Charity event',
-    location: 'Charlotte, NC',
-    date: '2022-09-30',
-    time: '10:00 AM'
-  }, {
-    name: 'Food drive',
-    location: 'Fort Mill, SC',
-    date: '2022-10-15',
-    time: '11:00 AM',
-  }, {
-    name: 'Blood drive',
-    location: 'Rock Hill, SC',
-    date: '2022-11-20',
-    time: '9:00 AM'
-  },{
-    name: 'Plasma drive',
-    location: 'Rock Hill, SC',
-    date: '2022-11-20',
-    time: '9:00 AM'
-  }]
+  let volunteerCounter = 1;
   
   const [userEvents, setUserEvents] = useState([]);
   const [upcomingEvents, setUpcomingEvents] = useState([]);
   const [organizationEvents, setOrganizationEvents] = useState([]);
   const [upcomingOrganizationEvents, setUpcomingOrganizationEvents] = useState([]);
+  const [currentEventView, setCurrentEventView] = useState("2b783258-ff7c-11ef-87c3-2c41c415193f");
 
   const getOrganization = async () => {
       try {
@@ -245,16 +203,24 @@ function DashboardCards({user, formatTime}) {
                         </thead>
                         
                         <tbody>
-                          {user.role === 'organization' 
-                            ? mockUsers.map((user, index) => (
-                                <tr key={index}>
-                                  <th>{index + 1}</th>
-                                  <td>{user.name}</td>
-                                  <td>{user.email}</td>
-                                  <td>{user.event}</td>
-                                  <td>{user.location}</td>
-                                </tr>
-                              )) 
+                          {user.role === 'organization'
+                            ? organizationEvents
+                            .filter(event => event.event_id === currentEventView)
+                            .map(event => (
+                                event.volunteer_names.map((volunteerName, volunteerIndex) => {
+                                    const currentIndex = volunteerCounter++;
+                                    
+                                    return (
+                                        <tr key={`${event.event_id}-${volunteerIndex}`}>
+                                            <th>{currentIndex}</th>
+                                            <td>{volunteerName}</td>
+                                            <td>{event.volunteer_emails[volunteerIndex]}</td>        
+                                            <td>{event.title}</td>
+                                            <td>{event.location}</td>
+                                        </tr>
+                                    );
+                                })
+                            ))
                             : userEvents.map((event, index) => (
                                 <tr key={index}>
                                   <td>{event.title}</td>

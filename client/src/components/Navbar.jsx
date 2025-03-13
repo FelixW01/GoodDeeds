@@ -59,7 +59,7 @@ function Navbar() {
           <div className="dropdown dropdown-end flex-row">
               <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
                   <div className="w-10 rounded-full flex-col content-center">
-                      <i class="fa-solid fa-user"></i>
+                      <i className="fa-solid fa-user"></i>
                   </div>
               </div>
               <ul
@@ -108,7 +108,7 @@ function Navbar() {
                 <div className="dropdown dropdown-end">
                     <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
                         <div className="w-10 rounded-full flex-col content-center">
-                          <i class="fa-solid fa-user"></i>
+                          <i className="fa-solid fa-user"></i>
                         </div>
                     </div>
                     <ul
