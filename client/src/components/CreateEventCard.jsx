@@ -105,9 +105,8 @@ const CreateEventCard = () => {
     e.preventDefault();
 
     // Validate state and zip before submitting
-    if (!statePattern.test(formData.state) || !zipPattern.test(formData.zip)) {
-      console.log(formData.state);
-      toast.error("Please correct errors before submitting.");
+    if (!zipPattern.test(formData.zip)) {
+      toast.error("Please enter zip code before submitting.");
       return;
     }
 
@@ -130,7 +129,7 @@ const CreateEventCard = () => {
   };
 
   return (
-    <div className="card lg:card-side bg-base-100 shadow-sm flex-row gap-10 justify-center items-center">
+    <div className="card lg:card-side bg-base-100 shadow-sm flex-col gap-10 justify-center items-center">
       <div className="max-w-md card body">
         <h1 className="card-title mb-10">Create Event</h1>
         <form onSubmit={handleSubmit}>
@@ -162,7 +161,7 @@ const CreateEventCard = () => {
                           <input
                             required
                             type="text"
-                            className="input input-bordered w-1/3"
+                            className="input input-bordered lg:w-1/3 w-1/2"
                             name="street"
                             placeholder="123 Main St"
                             value={formData.street}
@@ -172,7 +171,7 @@ const CreateEventCard = () => {
                           <input
                             required
                             type="text"
-                            className="input input-bordered w-1/5"
+                            className="input input-bordered lg:w-1/5 w-1/3"
                             name="city"
                             placeholder="Charlotte"
                             value={formData.city}
@@ -181,7 +180,7 @@ const CreateEventCard = () => {
 
                           <select
                             name="state"
-                            className="select select-bordered w-1/6"
+                            className="select select-bordered lg:w-1/6 w-1/3"
                             required
                             value={formData.state}
                             onChange={handleChange}
@@ -197,7 +196,7 @@ const CreateEventCard = () => {
                           <input
                             required
                             type="text"
-                            className={`input input-bordered w-1/6 ${errors.zip ? "border-red-500" : ""}`}
+                            className={`input input-bordered w-1/3 lg:w-1/6 ${errors.zip ? "border-red-500" : ""}`}
                             name="zip"
                             placeholder="28202"
                             value={formData.zip}
@@ -205,7 +204,6 @@ const CreateEventCard = () => {
                             onChange={handleChange}
                           />
                         </div>
-                        {errors.state && <p className="text-red-500 text-sm">{errors.state}</p>}
                         {errors.zip && <p className="text-red-500 text-sm">{errors.zip}</p>}
                       
                       <div className="flex gap-4">
@@ -274,11 +272,11 @@ const CreateEventCard = () => {
                 </fieldset>
               </form>
           </div>
-          <figure className="max-w-[50%] lg:max-w-[40%] card-image">
+          <figure className="hidden lg:block max-w-[50%] lg:max-w-[40%] card-image">
             <img
               src="img/volunteer-login.png"
               alt="Album" 
-              className="rounded-lg"
+              className="rounded-lg hidden lg:block"
               />
           </figure>
     </div>
