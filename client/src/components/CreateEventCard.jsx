@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 
@@ -133,7 +133,7 @@ const CreateEventCard = () => {
     <div className="hero bg-base-200 min-h-screen">
     <div className="hero-content text-center">
       <div className="max-w-md">
-        <h1 className="text-5xl font-bold mb-10">Create your event!</h1>
+        <h1 className="text-5xl font-bold mb-10">Create Event</h1>
         <form onSubmit={handleSubmit}>
                 <fieldset className="fieldset">
                       <legend className="fieldset-legend text-left">Event title</legend>
