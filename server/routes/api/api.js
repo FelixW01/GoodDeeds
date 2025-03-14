@@ -40,7 +40,8 @@ const {
     getUserEventById,
     updateUserEvent,
     deleteUserEvent,
-    getUserEventsByOrganizationId
+    getUserEventsByOrganizationId,
+    checkUserRegistration
 } = require('../../controllers/userEventController');
 
 // API routes for user
@@ -75,6 +76,7 @@ router.get('/user-events/get', isAdminOrUser, getUserEventById); // Get a specif
 router.put('/user-events/update', isAdminOrUser, updateUserEvent); // Only authenticated users can update user-event relationships
 router.delete('/user-events/delete', isAdminOrUser, deleteUserEvent); // Only authenticated users can delete user-event relationships
 router.get('/user-events/org/get', isAdminOrOrganization, getUserEventsByOrganizationId); // Organizations can view user-events for their own events
+router.get('/user-events/check-registration', isAdminOrUser, checkUserRegistration);
 
 
 
