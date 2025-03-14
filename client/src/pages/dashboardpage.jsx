@@ -18,8 +18,8 @@ function DashboardPage() {
 
   const { user, capitalize, formatTime } = useContext(UserContext); 
 
-  // user ? console.log(user) : null;
-  eventHeaders ? console.log(eventHeaders, 'event headers') : null;
+  user ? console.log(user) : null;
+
   return (
       <section className="flex flex-col items-center justify-center min-h-screen bg-white mt-10 mb-28">
         {user ? <div className="w-[90%] l:w-[90%] xl:w-[80%] flex flex-col items-center justify-center py-10">
