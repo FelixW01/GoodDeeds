@@ -15,7 +15,8 @@ const Accordion = () => {
                 <div className="collapse collapse-arrow join-item border-base-300 border">
                     <input type="radio" name="my-accordion-4"/>
                     <div className="collapse-title font-semibold">How do I track my volunteer hours?</div>
-                    <div className="collapse-content text-sm">You can track your volunteer hours by logging into your account and clicking on the "My Hours" tab. From there, you can view your total hours volunteered and download a certificate of completion.</div>
+                    <div className="collapse-content text-sm"> To track your volunteer hours, go to your dashboard. There, you will find a chart that displays your hours per month.
+                        Each event that you have signed up for will have its corresponding hours listed. Please note that hours can only be inputted on the day the event occurs.</div>
                 </div>
                 <div className="collapse collapse-arrow join-item border-base-300 border">
                     <input type="radio" name="my-accordion-4"/>

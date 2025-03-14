@@ -12,6 +12,16 @@ const registerUserForEvent = async (req, res) => {
 
     const connection = await pool.getConnection();
     try {
+        // Check if the user is already registered for the event
+        const [existingRegistration] = await connection.query(
+            'SELECT * FROM user_events WHERE user_id = ? AND event_id = ?',
+            [userId, event_id]
+        );
+
+        if (existingRegistration.length > 0) {
+            return res.status(409).json({ message: 'User  is already registered for this event' });
+        }
+
         // Insert the user-event relationship into the database
         const [result] = await connection.query(
             'INSERT INTO user_events (user_id, event_id) VALUES (?, ?)',
@@ -19,7 +29,7 @@ const registerUserForEvent = async (req, res) => {
         );
 
         res.status(201).json({
-            message: 'User registered for event successfully',
+            message: 'User  registered for event successfully',
             userEvent: {
                 user_event_id: result.insertId,
                 user_id: userId,
