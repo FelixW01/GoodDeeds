@@ -54,7 +54,7 @@ const EventCard = ({ event, loading }) => {
             }
         } catch (error) {
             console.error('Registration failed:', error);
-            toast.error('Failed to register for the event.');
+            toast.error('Already registered for this event.');
         }
     };
 
@@ -119,15 +119,20 @@ const EventCard = ({ event, loading }) => {
                 <p><strong>Contact Email:</strong> {org_contact_email}</p>
                 <div className="card-actions justify-center md:justify-end">
                     {(!user || user.role !== 'organization') && ( // Show button if not logged in or not an organization
-                        <div className="tooltip"
-                             data-tip={isRegistered ? "Already registered" : (isInactive ? "This event is inactive" : "Volunteering is fun!")}>
-                            <button
-                                className={`btn ${isRegistered ? 'bg-green-500 text-white' : (isInactive ? 'bg-gray-400 text-gray-600 cursor-not-allowed' : 'bg-[#5F477E] text-white hover:bg-[#7539C2]')}`}
-                                disabled={isInactive && !isRegistered} // Disable only if inactive and not registered
-                                onClick={handleRegister}
-                            >
-                                {isRegistered ? 'You Registered' : (isInactive ? 'Event is inactive' : 'Register to Volunteer')}
-                            </button>
+                        <div className="tooltip" data-tip={isRegistered ? "Already registered" : (isInactive ? "This event is inactive" : "Volunteering is fun!")}>
+                            {isRegistered ? (
+                                <button className="btn bg-green-500 text-white cursor-default">
+                                    You Registered
+                                </button>
+                            ) : (
+                                <button
+                                    className={`btn ${isInactive ? 'bg-gray-400 text-gray-600 cursor-not-allowed' : 'bg-[#5F477E] text-white hover:bg-[#7539C2]'}`}
+                                    disabled={isInactive} // Disable only if inactive
+                                    onClick={handleRegister}
+                                >
+                                    {isRegistered ? 'You Registered' : (isInactive ? 'Event is inactive' : 'Register to Volunteer')}
+                                </button>
+                            )}
                         </div>
                     )}
                 </div>

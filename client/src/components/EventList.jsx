@@ -5,8 +5,7 @@ import FilterEvents from './FilterEvents';
 import { useEventContext } from '../../context/eventContext';
 
 const EventList = () => {
-    const { filteredEvents, loading, error, handleSortChange, handleMonthFilter, handleTimeFilter } =
-        useEventContext();
+    const { filteredEvents, loading, error } = useEventContext();
 
     if (error) {
         return <div>Error: {error}</div>;
@@ -15,15 +14,13 @@ const EventList = () => {
     return (
         <div className="flex flex-col items-center gap-4 p-4">
             {/* Filter Component */}
-            <FilterEvents
-                onSortChange={handleSortChange}
-                onMonthFilter={handleMonthFilter}
-                onTimeFilter={handleTimeFilter}
-            />
+            <FilterEvents />
 
             {/* Event Cards */}
             {loading ? (
-                <div>Loading...</div>
+                <div className='h-96'>Loading...</div>
+            ) : filteredEvents.length === 0 ? (
+                <div className='h-96'>No events found</div>
             ) : (
                 filteredEvents.map((event) => (
                     <EventCard key={event.event_id} event={event} loading={loading} />
