@@ -130,10 +130,9 @@ const CreateEventCard = () => {
   };
 
   return (
-    <div className="hero bg-base-200 min-h-screen">
-    <div className="hero-content text-center">
-      <div className="max-w-md">
-        <h1 className="text-5xl font-bold mb-10">Create Event</h1>
+    <div className="card lg:card-side bg-base-100 shadow-sm flex-row gap-10 justify-center items-center">
+      <div className="max-w-md card body">
+        <h1 className="card-title mb-10">Create Event</h1>
         <form onSubmit={handleSubmit}>
                 <fieldset className="fieldset">
                       <legend className="fieldset-legend text-left">Event title</legend>
@@ -274,9 +273,15 @@ const CreateEventCard = () => {
                       <button className="btn bg-[#7539C2] text-white mt-4">Sign Up</button>
                 </fieldset>
               </form>
-      </div>
+          </div>
+          <figure className="max-w-[50%] lg:max-w-[40%] card-image">
+            <img
+              src="img/volunteer-login.png"
+              alt="Album" 
+              className="rounded-lg"
+              />
+          </figure>
     </div>
-  </div>
   )
 }
 
