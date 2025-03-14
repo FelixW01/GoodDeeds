@@ -66,7 +66,15 @@ const getUserEventsByUserId = async (req, res) => {
     try {
         // Query the database for all user-events associated with the authenticated user
         const [userEvents] = await connection.query(
-            `SELECT e.title, e.description, e.location, e.start_date, e.start_time, o.contact_email 
+            `SELECT 
+                ue.user_event_id,
+                ue.hours_worked,
+                e.title, 
+                e.description, 
+                e.location, 
+                e.start_date, 
+                e.start_time, 
+                o.contact_email 
             FROM user_events ue
             JOIN events e ON ue.event_id = e.event_id
             JOIN organizations o ON e.org_id = o.org_id
@@ -127,7 +135,7 @@ const updateUserEvent = async (req, res) => {
 
         // Update the user-event
         const [result] = await connection.query(
-            'UPDATE user_events SET status = ?, progress = ?, hours_worked = ? WHERE user_event_id = ?',
+            'UPDATE user_events SET status = ?, progress = ?, hours_worked = hours_worked + ? WHERE user_event_id = ?',
             [status, progress, hours_worked, user_event_id]
         );
 

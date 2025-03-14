@@ -105,9 +105,8 @@ const CreateEventCard = () => {
     e.preventDefault();
 
     // Validate state and zip before submitting
-    if (!statePattern.test(formData.state) || !zipPattern.test(formData.zip)) {
-      console.log(formData.state);
-      toast.error("Please correct errors before submitting.");
+    if (!zipPattern.test(formData.zip)) {
+      toast.error("Please enter zip code before submitting.");
       return;
     }
 
@@ -130,10 +129,9 @@ const CreateEventCard = () => {
   };
 
   return (
-    <div className="hero bg-base-200 min-h-screen">
-    <div className="hero-content text-center">
-      <div className="max-w-md">
-        <h1 className="text-5xl font-bold mb-10">Create Event</h1>
+    <div className="card lg:card-side bg-base-100 flex-col gap-10 justify-center items-center">
+      <div className="max-w-md card body">
+        <h1 className="card-title mb-10">Create Event</h1>
         <form onSubmit={handleSubmit}>
                 <fieldset className="fieldset">
                       <legend className="fieldset-legend text-left">Event title</legend>
@@ -163,7 +161,7 @@ const CreateEventCard = () => {
                           <input
                             required
                             type="text"
-                            className="input input-bordered w-1/3"
+                            className="input input-bordered lg:w-1/3 md:w-1/2 w-full"
                             name="street"
                             placeholder="123 Main St"
                             value={formData.street}
@@ -173,7 +171,7 @@ const CreateEventCard = () => {
                           <input
                             required
                             type="text"
-                            className="input input-bordered w-1/5"
+                            className="input input-bordered lg:w-1/5 md:w-1/3 w-full"
                             name="city"
                             placeholder="Charlotte"
                             value={formData.city}
@@ -182,7 +180,7 @@ const CreateEventCard = () => {
 
                           <select
                             name="state"
-                            className="select select-bordered w-1/6"
+                            className="select select-bordered lg:w-1/6 md:w-1/2 w-full"
                             required
                             value={formData.state}
                             onChange={handleChange}
@@ -198,7 +196,7 @@ const CreateEventCard = () => {
                           <input
                             required
                             type="text"
-                            className={`input input-bordered w-1/6 ${errors.zip ? "border-red-500" : ""}`}
+                            className={`input input-bordered md:w-1/3 lg:w-1/6 w-full ${errors.zip ? "border-red-500" : ""}`}
                             name="zip"
                             placeholder="28202"
                             value={formData.zip}
@@ -206,11 +204,10 @@ const CreateEventCard = () => {
                             onChange={handleChange}
                           />
                         </div>
-                        {errors.state && <p className="text-red-500 text-sm">{errors.state}</p>}
                         {errors.zip && <p className="text-red-500 text-sm">{errors.zip}</p>}
                       
-                      <div className="flex gap-4">
-                        <div className="flex flex-col w-1/2">
+                      <div className="flex gap-4 lg:flex-nowrap flex-wrap">
+                        <div className="flex flex-col lg:w-1/2 w-full">
                           <legend className="fieldset-legend">Start date</legend>
                           <input
                             required
@@ -222,7 +219,7 @@ const CreateEventCard = () => {
                             onChange={handleChange}
                           />
                         </div>
-                        <div className="flex flex-col w-1/2">
+                        <div className="flex flex-col lg:w-1/2 w-full">
                           <legend className="fieldset-legend">End date</legend>
                           <input
                             required
@@ -274,9 +271,15 @@ const CreateEventCard = () => {
                       <button className="btn bg-[#7539C2] text-white mt-4">Sign Up</button>
                 </fieldset>
               </form>
-      </div>
+          </div>
+          <figure className="hidden lg:block max-h-[605px] lg:max-w-[35%] card-image">
+            <img
+              src="img/volunteer-event.jpg"
+              alt="Album" 
+              className="rounded-lg hidden lg:block"
+              />
+          </figure>
     </div>
-  </div>
   )
 }
 

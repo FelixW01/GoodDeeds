@@ -4,29 +4,49 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 
 function DashboardCards({user, formatTime, currentEventView, setEventHeaders}) {
-  const getMonthLabels = () => {
-  const months = [
-    "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-  ];
-  
-  // Get current month (0-11)
-  const currentMonth = new Date().getMonth(); 
-  const labels = [];
-  
-  // 6 months including the current month
-  for (let i = 0; i < 6; i++) { 
-    // %12 will loop around if i exceeds 12 (December)
-    labels.push(months[(currentMonth + i) % 12]); 
-  }
+  const [monthlyHours, setMonthlyHours] = useState(Array(6).fill(0));
 
-  return labels;
+  // This returns the month labels for the chart, the last 6 months
+  const getMonthLabels = () => {
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const currentMonth = new Date().getMonth();
+  
+  return Array.from({ length: 6 }, (_, i) => {
+    const monthIndex = (currentMonth - (5 - i) + 12) % 12;
+    return months[monthIndex];
+  });
 };
+
+// Gather all the hours worked by month
+const aggregateHoursByMonth = (events) => {
+    const currentMonth = new Date().getMonth();
+    // This creates an array with 6 empty slots and fill it with 0 as the starting
+    const lastSixMonths = Array(6).fill(0);
+
+    events.forEach(event => {
+      // Check if event has hours logged
+      if (event.hours_worked) {
+        const eventMonth = new Date(event.start_date).getUTCMonth();
+        // Calculate the difference in months between the current month and the event month
+        const monthDiff = (currentMonth - eventMonth + 12) % 12;
+        // Only consider events within the last 6 months
+        if (monthDiff < 6) {
+          // Adds the event hours worked and adds it to the corresponding month
+          lastSixMonths[5 - monthDiff] += parseFloat(event.hours_worked);
+        }
+      }
+    });
+    console.log(lastSixMonths, '<< last six months')
+    setMonthlyHours(lastSixMonths);
+  };
+
+  // console.log(monthlyHours, '<< monthly hours')
   const data = {
     labels: getMonthLabels(),
     datasets: [
       {
         label: user.role === "organization" ? "Volunteers" : "Volunteer Hours",
-        data: [5, 10, 20, 10, 25],
+        data: monthlyHours,
         borderColor: "#BFDBF7",
         backgroundColor: "#BFDBF7",
       },  
@@ -43,7 +63,27 @@ function DashboardCards({user, formatTime, currentEventView, setEventHeaders}) {
   const [upcomingEvents, setUpcomingEvents] = useState([]);
   const [organizationEvents, setOrganizationEvents] = useState([]);
   const [upcomingOrganizationEvents, setUpcomingOrganizationEvents] = useState([]);
-  
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [volunteerHours, setVolunteerHours] = useState(0);
+
+  const openModal = (event) => {
+    setSelectedEvent(event);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setVolunteerHours("");
+  };
+
+  const submitHours = () => {
+    if (selectedEvent) {
+      console.log('Submitting hours:', volunteerHours);
+      updateUserHours();
+      closeModal();
+    }
+  };
 
   const getOrganization = async () => {
       try {
@@ -54,7 +94,6 @@ function DashboardCards({user, formatTime, currentEventView, setEventHeaders}) {
                   id: event.event_id,
               };
           });
-          // console.log('User  Events:', response.data);
           setOrganizationEvents(response.data);
           setEventHeaders(eventHeaders);
       } catch (error) {
@@ -65,10 +104,24 @@ function DashboardCards({user, formatTime, currentEventView, setEventHeaders}) {
   const getUserEvents = async () => {
       try {
           const response = await axios.get('/api/user-events/user/get');
-          console.log('User  Events:', response.data);
           setUserEvents(response.data);
+          aggregateHoursByMonth(response.data);
       } catch (error) {
           console.error('Error fetching user events:', error);
+      }
+  };
+  
+  const updateUserHours = async () => {
+       try {
+        const response = await axios.put('/api/user-events/update', {
+          user_event_id: selectedEvent.user_event_id,
+          hours_worked: volunteerHours,
+        });
+        console.log(response.data);
+        setVolunteerHours('');
+        closeModal();
+      } catch (error) {
+        console.error('Error updating hours:', error);
       }
   };
 
@@ -110,6 +163,7 @@ function DashboardCards({user, formatTime, currentEventView, setEventHeaders}) {
         getUpcomingEvents();
     } 
 }, [userEvents, organizationEvents]);
+
 
   return (
     <>
@@ -231,10 +285,33 @@ function DashboardCards({user, formatTime, currentEventView, setEventHeaders}) {
                                   <td>{event.contact_email}</td>
                                   <td>{event.location}</td>
                                   <td>{new Date(event.start_date).toLocaleDateString()}</td>
+                                  <td><button className="btn bg-blue-300 text-black " onClick={() => openModal(event)}>Log Hours</button></td>                      
                                 </tr>
                               ))}
                         </tbody>
                       </table>
+                      {/* Modal */}
+                      {isModalOpen && (
+                        <div className="modal modal-open">
+                          <div className="modal-box">
+                            <h3 className="font-bold text-lg">Log Hours for {selectedEvent?.title}</h3>
+                            <input
+                              type="number"
+                              className="input input-bordered w-full mt-3"
+                              placeholder="Enter hours"
+                              onChange={(e) => setVolunteerHours(e.target.value)}
+                            />
+                            <div className="modal-action">
+                              <button className="btn btn-success" onClick={submitHours}>
+                                Submit
+                              </button>
+                              <button className="btn" onClick={closeModal}>
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
               </div>
             </div>

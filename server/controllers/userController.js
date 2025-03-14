@@ -93,7 +93,15 @@ const getUserProfile = async (req, res) => {
 
     const connection = await pool.getConnection();
     try {
-        const [result] = await connection.query('SELECT first_name, last_name, profile_picture, role FROM users WHERE user_id = ?', [userId]);
+        const [result] = await connection.query(
+            `SELECT u.first_name, u.last_name, u.profile_picture, u.role, 
+                    COALESCE(SUM(ue.hours_worked), 0) AS total_hours_worked
+            FROM users u
+            LEFT JOIN user_events ue ON u.user_id = ue.user_id
+            WHERE u.user_id = ?
+            GROUP BY u.user_id`,
+            [userId]
+        );
         if (result.length === 0) {
             return res.status(404).json({ message: 'User  not found' });
         }
