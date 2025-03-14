@@ -40,14 +40,15 @@ function SignUpOrgCard() {
     if (!emailPattern.test(formData[field])) {
       setError(`Invalid ${field.replace('_', ' ')}: ${formData[field]}`);
       return;
+     }
     }
-  }
 
     try {
-      const response = await axios.post('/api/organizations/create', formData);
-      console.log('Organization account created:', response.data);
-      toast.success('Account created successfully!');
-      navigate('/login');
+      const response = await axios.post('/api/events/create', formData);
+      console.log('Event created:', response.data);
+
+      toast.success('Eventcreated successfully!');
+
     } catch (err) {
       console.error('Error creating organization account:', err.response?.data || err.message);
       setError(err.response?.data?.message || 'Something went wrong');
