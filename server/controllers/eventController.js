@@ -112,7 +112,7 @@ const getEventById = async (req, res) => {
 
 // Update an event
 const updateEvent = async (req, res) => {
-    const { event_id, title, description, location, start_date, start_time, end_date, end_time, requirements } = req.body; // Get data from the request body
+    const { event_id, title, description, location, start_date, start_time, end_date, end_time, requirements, status } = req.body; // Get data from the request body
     const userId = req.user.userId; // Get userId from the authenticated user
 
     const connection = await pool.getConnection();
@@ -135,16 +135,65 @@ const updateEvent = async (req, res) => {
             return res.status(403).json({ message: 'Access denied. Event does not belong to this organization.' });
         }
 
-        // Update the event
-        const [result] = await connection.query(
-            'UPDATE events SET title = ?, description = ?, location = ?, start_date = ?, start_time = ?, end_date = ?, end_time = ?, requirements = ? WHERE event_id = ?',
-            [title, description, location, start_date, start_time, end_date, end_time, requirements, event_id]
-        );
+        // Dynamically build the SQL query based on provided fields
+        let query = 'UPDATE events SET ';
+        const updates = [];
+        const values = [];
+
+        if (title) {
+            updates.push('title = ?');
+            values.push(title);
+        }
+        if (description) {
+            updates.push('description = ?');
+            values.push(description);
+        }
+        if (location) {
+            updates.push('location = ?');
+            values.push(location);
+        }
+        if (start_date) {
+            updates.push('start_date = ?');
+            values.push(start_date);
+        }
+        if (start_time) {
+            updates.push('start_time = ?');
+            values.push(start_time);
+        }
+        if (end_date) {
+            updates.push('end_date = ?');
+            values.push(end_date);
+        }
+        if (end_time) {
+            updates.push('end_time = ?');
+            values.push(end_time);
+        }
+        if (requirements) {
+            updates.push('requirements = ?');
+            values.push(requirements);
+        }
+        if (status) {
+            updates.push('status = ?');
+            values.push('status')
+        }
+
+
+        // If no fields are provided to update, return an error
+        if (updates.length === 0) {
+            return res.status(400).json({ message: 'No fields provided for update' });
+        }
+
+        // Add the WHERE clause
+        query += updates.join(', ') + ' WHERE event_id = ?';
+        values.push(event_id);
+
+        // Execute the query
+        const [result] = await connection.query(query, values);
 
         if (result.affectedRows === 0) {
             res.status(404).json({ message: 'Event not found' });
         } else {
-            res.json({ message: 'Event updated successfully' });
+            res.json({ message: 'Event updated successfully', status });
         }
     } catch (err) {
         console.error('Error updating event:', err);

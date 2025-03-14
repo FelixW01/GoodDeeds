@@ -1,4 +1,3 @@
-// EventContext.js
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 
@@ -15,8 +14,9 @@ export const EventProvider = ({ children }) => {
         const fetchEvents = async () => {
             try {
                 const response = await axios.get('/api/events/all'); // Replace with your API endpoint
-                setEvents(response.data);
-                setFilteredEvents(response.data);
+                const sortedEvents = response.data.sort((a, b) => new Date(b.start_date) - new Date(a.start_date)); // Sort events from newest to oldest
+                setEvents(sortedEvents);
+                setFilteredEvents(sortedEvents);
                 setLoading(false);
             } catch (err) {
                 setError(err.message);
@@ -47,7 +47,8 @@ export const EventProvider = ({ children }) => {
             const eventMonth = new Date(event.start_date).toISOString().split('-')[1]; // Extract month
             return eventMonth === month;
         });
-        setFilteredEvents(filtered);
+        const sortedFiltered = filtered.sort((a, b) => new Date(b.start_date) - new Date(a.start_date)); // Sort filtered events
+        setFilteredEvents(sortedFiltered);
     };
 
     // Handle time filtering (24-hour format)
@@ -62,7 +63,8 @@ export const EventProvider = ({ children }) => {
                 ? eventHour >= 6 && eventHour < 12 // Morning: 6:00 - 11:59
                 : eventHour >= 12 && eventHour < 18; // Afternoon: 12:00 - 17:59
         });
-        setFilteredEvents(filtered);
+        const sortedFiltered = filtered.sort((a, b) => new Date(b.start_date) - new Date(a.start_date)); // Sort filtered events
+        setFilteredEvents(sortedFiltered);
     };
 
     return (

@@ -204,6 +204,29 @@ const getUserEventsByOrganizationId = async (req, res) => {
     }
 };
 
+const checkUserRegistration = async (req, res) => {
+    const { event_id } = req.query; // Get event_id from query parameters
+    const userId = req.user.userId; // Get userId from the authenticated user
+
+    const connection = await pool.getConnection();
+    try {
+        // Query the database to check if the user is registered for the event
+        const [result] = await connection.query(
+            'SELECT * FROM user_events WHERE event_id = ? AND user_id = ?',
+            [event_id, userId]
+        );
+
+        // Return whether the user is registered
+        res.json({ isRegistered: result.length > 0 });
+    } catch (err) {
+        console.error('Error checking user registration:', err);
+        res.status(500).json({ message: 'Error checking user registration' });
+    } finally {
+        connection.release();
+    }
+};
+
+
 module.exports = {
     registerUserForEvent,
     getAllUserEvents,
@@ -211,5 +234,6 @@ module.exports = {
     getUserEventById,
     updateUserEvent,
     deleteUserEvent,
-    getUserEventsByOrganizationId
+    getUserEventsByOrganizationId,
+    checkUserRegistration
 };
