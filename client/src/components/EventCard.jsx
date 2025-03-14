@@ -117,7 +117,7 @@ const EventCard = ({ event, loading }) => {
                 <p><strong>Status:</strong> {isInactive ? 'INACTIVE' : status.toUpperCase()}</p>
                 <p><strong>Organization:</strong> {org_name}</p>
                 <p><strong>Contact Email:</strong> {org_contact_email}</p>
-                <div className="card-actions justify-end">
+                <div className="card-actions justify-center md:justify-end">
                     {(!user || user.role !== 'organization') && ( // Show button if not logged in or not an organization
                         <div className="tooltip"
                              data-tip={isRegistered ? "Already registered" : (isInactive ? "This event is inactive" : "Volunteering is fun!")}>
