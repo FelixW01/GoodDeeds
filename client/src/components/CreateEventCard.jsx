@@ -129,7 +129,7 @@ const CreateEventCard = () => {
   };
 
   return (
-    <div className="card lg:card-side bg-base-100 shadow-sm flex-col gap-10 justify-center items-center">
+    <div className="card lg:card-side bg-base-100 flex-col gap-10 justify-center items-center">
       <div className="max-w-md card body">
         <h1 className="card-title mb-10">Create Event</h1>
         <form onSubmit={handleSubmit}>
@@ -272,9 +272,9 @@ const CreateEventCard = () => {
                 </fieldset>
               </form>
           </div>
-          <figure className="hidden lg:block max-w-[50%] lg:max-w-[40%] card-image">
+          <figure className="hidden lg:block max-h-[605px] lg:max-w-[35%] card-image">
             <img
-              src="img/volunteer-login.png"
+              src="img/volunteer-event.jpg"
               alt="Album" 
               className="rounded-lg hidden lg:block"
               />
