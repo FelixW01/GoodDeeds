@@ -1,5 +1,7 @@
 const pool = require('../db/config.js');
 const bcrypt = require('bcrypt');
+const fs = require('fs');
+const { uploadToCloudinary } = require('../config/cloudinary');
 
 //signup an organization
 const signUpOrganization = async (req, res) => {
@@ -135,7 +137,32 @@ const getOrganizationByUserId = async (req, res) => {
 // Update organization profile (for authenticated organization users)
 const updateOrganization = async (req, res) => {
     const userId = req.user.userId; // Get userId from the authenticated user
-    const { name, description, logo, website, contact_email } = req.body;
+    const { name, description, website, contact_email } = req.body;
+
+    // Logo will come from Cloudinary upload
+    let logoUrl = null;
+
+    // Validate contact email if provided
+    if (contact_email) {
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!emailRegex.test(contact_email)) {
+            return res.status(400).json({ message: 'Invalid contact email' });
+        }
+    }
+
+    // If file was uploaded, process it
+    if (req.file) {
+        try {
+            // Upload file to Cloudinary
+            logoUrl = await uploadToCloudinary(req.file.path);
+
+            // Delete the temporary file
+            fs.unlinkSync(req.file.path);
+        } catch (error) {
+            console.error('Error processing organization logo:', error);
+            return res.status(500).json({ message: 'Error processing organization logo' });
+        }
+    }
 
     const connection = await pool.getConnection();
     try {
@@ -145,17 +172,56 @@ const updateOrganization = async (req, res) => {
             return res.status(403).json({ message: 'Access denied. User is not an organization.' });
         }
 
-        // Update the organization linked to the user
-        const [result] = await connection.query(
-            'UPDATE organizations SET name = ?, description = ?, logo = ?, website = ?, contact_email = ? WHERE user_id = ?',
-            [name, description, logo, website, contact_email, userId]
-        );
+        // Dynamically build the SQL query based on provided fields
+        let query = 'UPDATE organizations SET ';
+        const updates = [];
+        const values = [];
+
+        if (name) {
+            updates.push('name = ?');
+            values.push(name);
+        }
+
+        if (description) {
+            updates.push('description = ?');
+            values.push(description);
+        }
+
+        if (website) {
+            updates.push('website = ?');
+            values.push(website);
+        }
+
+        if (contact_email) {
+            updates.push('contact_email = ?');
+            values.push(contact_email);
+        }
+
+        if (logoUrl) {
+            updates.push('logo = ?');
+            values.push(logoUrl);
+        }
+
+        // If no fields are provided to update, return an error
+        if (updates.length === 0) {
+            return res.status(400).json({ message: 'No fields provided for update' });
+        }
+
+        // Add the WHERE clause
+        query += updates.join(', ') + ' WHERE user_id = ?';
+        values.push(userId);
+
+        // Execute the query
+        const [result] = await connection.query(query, values);
 
         if (result.affectedRows === 0) {
-            res.status(404).json({ message: 'Organization not found' });
-        } else {
-            res.json({ message: 'Organization updated successfully' });
+            return res.status(404).json({ message: 'Organization not found' });
         }
+
+        res.json({
+            message: 'Organization updated successfully',
+            logo: logoUrl || 'No change' // Return the new logo URL if updated
+        });
     } catch (err) {
         console.error('Error updating organization:', err);
         res.status(500).json({ message: 'Error updating organization' });

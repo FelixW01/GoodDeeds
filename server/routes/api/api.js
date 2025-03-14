@@ -4,6 +4,8 @@ const auth = require('../../middleware/auth');
 const isAdmin = require('../../middleware/isAdmin');
 const isAdminOrOrganization = require('../../middleware/isAdminOrOrganization');
 const isAdminOrUser = require('../../middleware/isAdminOrUser');
+const upload = require('../../config/multer')
+
 const {
     createUser,
     getAllUsers,
@@ -45,7 +47,7 @@ const {
 router.post('/user/create', createUser);
 router.get('/user/all', isAdmin, getAllUsers);
 router.get('/user/profile', auth, getUserProfile);
-router.put('/user/update', auth, updateUser);
+router.put('/user/update', auth, upload.single('profile_picture'), updateUser);
 router.delete('/user/delete', auth, deleteUser);
 router.post('/login', loginUser);
 router.post('/logout', auth, logoutUser);
@@ -54,7 +56,7 @@ router.post('/logout', auth, logoutUser);
 router.post('/organizations/create', signUpOrganization); // Sign up a new organization
 router.get('/organizations/all', getAllOrganizations); // Get all organizations
 router.get('/organizations/get', auth, getOrganizationByUserId); // Get an organization by ID
-router.put('/organizations/update', isAdminOrOrganization, updateOrganization); // Update an organization by ID
+router.put('/organizations/update', isAdminOrOrganization, upload.single('logo'), updateOrganization); // Update an organization by ID
 router.delete('/organizations/delete', isAdminOrOrganization, deleteOrganization); // Delete an organization by ID
 
 // Event Routes
