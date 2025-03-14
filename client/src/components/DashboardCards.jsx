@@ -285,7 +285,7 @@ const aggregateHoursByMonth = (events) => {
                                   <td>{event.contact_email}</td>
                                   <td>{event.location}</td>
                                   <td>{new Date(event.start_date).toLocaleDateString()}</td>
-                                  <td><button className="btn" onClick={() => openModal(event)}>open modal</button></td>                      
+                                  <td><button className="btn bg-blue-300 text-black " onClick={() => openModal(event)}>Log Hours</button></td>                      
                                 </tr>
                               ))}
                         </tbody>
