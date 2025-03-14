@@ -161,7 +161,7 @@ const CreateEventCard = () => {
                           <input
                             required
                             type="text"
-                            className="input input-bordered lg:w-1/3 w-1/2"
+                            className="input input-bordered lg:w-1/3 md:w-1/2 w-full"
                             name="street"
                             placeholder="123 Main St"
                             value={formData.street}
@@ -171,7 +171,7 @@ const CreateEventCard = () => {
                           <input
                             required
                             type="text"
-                            className="input input-bordered lg:w-1/5 w-1/3"
+                            className="input input-bordered lg:w-1/5 md:w-1/3 w-full"
                             name="city"
                             placeholder="Charlotte"
                             value={formData.city}
@@ -180,7 +180,7 @@ const CreateEventCard = () => {
 
                           <select
                             name="state"
-                            className="select select-bordered lg:w-1/6 w-1/3"
+                            className="select select-bordered lg:w-1/6 md:w-1/2 w-full"
                             required
                             value={formData.state}
                             onChange={handleChange}
@@ -196,7 +196,7 @@ const CreateEventCard = () => {
                           <input
                             required
                             type="text"
-                            className={`input input-bordered w-1/3 lg:w-1/6 ${errors.zip ? "border-red-500" : ""}`}
+                            className={`input input-bordered md:w-1/3 lg:w-1/6 w-full ${errors.zip ? "border-red-500" : ""}`}
                             name="zip"
                             placeholder="28202"
                             value={formData.zip}
@@ -206,8 +206,8 @@ const CreateEventCard = () => {
                         </div>
                         {errors.zip && <p className="text-red-500 text-sm">{errors.zip}</p>}
                       
-                      <div className="flex gap-4">
-                        <div className="flex flex-col w-1/2">
+                      <div className="flex gap-4 lg:flex-nowrap flex-wrap">
+                        <div className="flex flex-col lg:w-1/2 w-full">
                           <legend className="fieldset-legend">Start date</legend>
                           <input
                             required
@@ -219,7 +219,7 @@ const CreateEventCard = () => {
                             onChange={handleChange}
                           />
                         </div>
-                        <div className="flex flex-col w-1/2">
+                        <div className="flex flex-col lg:w-1/2 w-full">
                           <legend className="fieldset-legend">End date</legend>
                           <input
                             required
