@@ -22,7 +22,7 @@ const ContactForm = () => {
 
     return (
         <>
-            <div className="hero bg-gradient-to-r from-[#F7F7F7] to-[#E5D8F5] p-14 w-full xl:w-8/12 xl:mt-12 xl:rounded-lg">
+            <div className="hero bg-gradient-to-r from-[#F7F7F7] to-[#E5D8F5] xl:p-14 w-full xl:w-8/12 xl:mt-12 xl:rounded-lg">
                 <div className="hero-content flex-col lg:flex-row-reverse">
                     <div className="text-center lg:text-left">
                         <h1 className="text-5xl font-bold">Get in Touch</h1>
@@ -32,10 +32,10 @@ const ContactForm = () => {
                     </div>
                     <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
                         <div className="card-body">
-                            <form onSubmit={handleSubmit}>
+                            <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
                                 <div className="form-control">
                                     <label className="label">
-                                        <span className="label-text">Name</span>
+                                        <span className="label-text text-black">Name</span>
                                     </label>
                                     <input
                                         type="text"
@@ -47,19 +47,19 @@ const ContactForm = () => {
                                 </div>
                                 <div className="form-control">
                                     <label className="label">
-                                        <span className="label-text">Email</span>
+                                        <span className="label-text text-black">Email</span>
                                     </label>
                                     <input
                                         type="email"
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
                                         className="input input-bordered w-full"
-                                        placeholder="Email"
+                                        placeholder="email@example.com"
                                     />
                                 </div>
                                 <div className="form-control">
                                     <label className="label">
-                                        <span className="label-text">Message</span>
+                                        <span className="label-text text-black">Message</span>
                                     </label>
                                     <textarea
                                         value={message}
