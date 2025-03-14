@@ -133,16 +133,17 @@ const EventCard = ({ event, loading }) => {
                 </div>
             </div>
 
-            {/* DaisyUI Modal */}
-            <dialog id="my_modal_1" className="modal" open={showModal}>
+            <dialog className="modal" open={showModal}>
                 <div className="modal-box">
                     <h3 className="font-bold text-lg">Sign Up or Log In</h3>
                     <p className="py-4">You need to log in or sign up to register for this event.</p>
                     <div className="modal-action">
                         <form method="dialog">
-                            <button className="btn" onClick={() => setShowModal(false)}>Close</button>
+                            <div className='flex gap-2'>
                             <button className="btn" onClick={() => window.location.href = '/login'}>Log In</button>
-                            <button className="btn" onClick={() => window.location.href = '/signup'}>Sign Up</button>
+                            <button className="btn bg-gray-700 hover:bg-gray-600 text-white" onClick={() => window.location.href = '/signup'}>Sign Up</button>
+                            <button className="btn btn-error text-white" onClick={() => setShowModal(false)}>Close</button>
+                            </div>
                         </form>
                     </div>
                 </div>
