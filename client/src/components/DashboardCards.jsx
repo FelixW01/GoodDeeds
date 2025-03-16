@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 
 function DashboardCards({user, formatTime, currentEventView, setEventHeaders}) {
   const [monthlyHours, setMonthlyHours] = useState(Array(6).fill(0));
+  const [monthlyVolunteerCounts, setMonthlyVolunteerCounts] = useState(Array(6).fill(0));
 
   // This returns the month labels for the chart, the last 6 months
   const getMonthLabels = () => {
@@ -22,10 +23,12 @@ const aggregateHoursByMonth = (events) => {
     const currentMonth = new Date().getMonth();
     // This creates an array with 6 empty slots and fill it with 0 as the starting
     const lastSixMonths = Array(6).fill(0);
+    const lastSixMonthsVolunteers = Array(6).fill(0);
 
     events.forEach(event => {
       // Check if event has hours logged
-      if (event.hours_worked) {
+      console.log(event, '<< event here')
+      if (event.hours_worked || event.volunteer_names.length > 0) {
         const eventMonth = new Date(event.start_date).getUTCMonth();
         // Calculate the difference in months between the current month and the event month
         const monthDiff = (currentMonth - eventMonth + 12) % 12;
@@ -33,28 +36,38 @@ const aggregateHoursByMonth = (events) => {
         if (monthDiff < 6) {
           // Adds the event hours worked and adds it to the corresponding month
           lastSixMonths[5 - monthDiff] += parseFloat(event.hours_worked);
+          lastSixMonthsVolunteers[5 - monthDiff] += event.volunteer_names.length;
         }
       }
     });
-    console.log(lastSixMonths, '<< last six months')
+
     setMonthlyHours(lastSixMonths);
+    setMonthlyVolunteerCounts(lastSixMonthsVolunteers);
   };
 
-  // console.log(monthlyHours, '<< monthly hours')
+  // console.log(monthlyVolunteerCounts, '<< monthly Volunteer counts')
+
   const data = {
     labels: getMonthLabels(),
     datasets: [
       {
         label: user.role === "organization" ? "Volunteers" : "Volunteer Hours",
-        data: monthlyHours,
+        data: user.role === "organization" ? monthlyVolunteerCounts : monthlyHours,
         borderColor: "#BFDBF7",
         backgroundColor: "#BFDBF7",
       },  
     ],
   };
 
-  const options = {
+ const options = {
     responsive: true,
+    scales: {
+          y: {
+              type: 'linear',
+              position: 'left',
+              beginAtZero: true,
+          }
+      }
   };
 
   let volunteerCounter = 1;
@@ -94,8 +107,11 @@ const aggregateHoursByMonth = (events) => {
                   id: event.event_id,
               };
           });
+          console.log(response.data, '<< organization events')
           setOrganizationEvents(response.data);
           setEventHeaders(eventHeaders);
+
+          aggregateHoursByMonth(response.data);
       } catch (error) {
           console.error('Error fetching user events:', error);
       }
@@ -120,6 +136,9 @@ const aggregateHoursByMonth = (events) => {
         console.log(response.data);
         setVolunteerHours('');
         closeModal();
+
+        // Refetch user events to update chart data
+        getUserEvents();
       } catch (error) {
         console.error('Error updating hours:', error);
       }
@@ -172,7 +191,7 @@ const aggregateHoursByMonth = (events) => {
             {/* Line graph */}
             <div className="card card-border flex-1 h-full w-full lg:max-w-[50%]"> 
               <div className="card-body rounded-lg h-full">
-                <h2 className="card-title">{user.role === 'user' ? 'Volunteer Hours' : 'Volunteer Statistics'}</h2>
+                <h2 className="card-title">{user.role === 'user' ? 'Volunteer Hours' : 'Number of Volunteers'}</h2>
                 <Line data={data} options={options} className="h-full" /> 
               </div>
             </div>
@@ -285,7 +304,19 @@ const aggregateHoursByMonth = (events) => {
                                   <td>{event.contact_email}</td>
                                   <td>{event.location}</td>
                                   <td>{new Date(event.start_date).toLocaleDateString()}</td>
-                                  <td><button className="btn bg-blue-300 text-black " onClick={() => openModal(event)}>Log Hours</button></td>                      
+                                  <td>
+                                    {new Date(event.start_date) > new Date() ? (
+                                      <div className="tooltip tooltip-top" data-tip="Available after event date">
+                                        <button className="btn btn-disabled">
+                                          Log Hours
+                                        </button>
+                                      </div>
+                                    ) : (
+                                      <button className="btn btn-primary" onClick={() => openModal(event)}>
+                                        Log Hours
+                                      </button>
+                                    )}
+                                  </td>           
                                 </tr>
                               ))}
                         </tbody>
