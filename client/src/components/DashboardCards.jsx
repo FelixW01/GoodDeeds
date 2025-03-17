@@ -79,6 +79,12 @@ const aggregateHoursByMonth = (events) => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [volunteerHours, setVolunteerHours] = useState(0);
+  const [currentEvents, setCurrentEvents] = useState([]);
+  const [activeTab, setActiveTab] = useState(1);
+
+  const handleTabClick = (tabIndex) => {
+    setActiveTab(tabIndex);
+  };
 
   const openModal = (event) => {
     setSelectedEvent(event);
@@ -152,6 +158,7 @@ const aggregateHoursByMonth = (events) => {
         twoWeeksFromNow.setDate(today.getDate() + 14);
 
         let filteredUpcomingEvents = [];
+        let filteredCurrentEvents = [];
 
         if (user.role === 'organization') {
             // Filter organization events if role is 'organization'
@@ -159,13 +166,22 @@ const aggregateHoursByMonth = (events) => {
                 const eventStartDate = new Date(event.start_date);
                 return eventStartDate >= today && eventStartDate <= twoWeeksFromNow;
             });
+
+            filteredCurrentEvents = organizationEvents.filter(event => {
+                const eventStartDate = new Date(event.start_date);
+                const eventEndDate = new Date(event.end_date);
+                return eventStartDate <= today && eventEndDate >= today;
+            });
+
             setUpcomingOrganizationEvents(filteredUpcomingEvents);
+            setCurrentEvents(filteredCurrentEvents);
         } else {
             // Filter user events if role is not 'organization'
             filteredUpcomingEvents = userEvents.filter(event => {
                 const eventStartDate = new Date(event.start_date);
                 return eventStartDate >= today && eventStartDate <= twoWeeksFromNow;
             });
+
             setUpcomingEvents(filteredUpcomingEvents);
         }
       } catch (error) {
@@ -183,7 +199,7 @@ const aggregateHoursByMonth = (events) => {
     } 
 }, [userEvents, organizationEvents]);
 
-
+  currentEvents ? console.log(currentEvents, '<< current events') : console.log('No current events')
   return (
     <>
         <div className="flex flex-col lg:flex-row justify-center items-center my-10 gap-10 lg:h-80 xl:h-3/4"> 
@@ -199,7 +215,16 @@ const aggregateHoursByMonth = (events) => {
             {/* Upcoming event table  */}  
             <div className="card card-border flex-1 h-full w-full lg:max-w-[50%]"> 
               <div className="card-body bg-base-300 rounded-lg h-full bg-gradient-to-r from-[#F7F7F7] to-[#E5D8F5]">
-                <h2 className="card-title">Upcoming Events</h2>
+                <div role="tablist" className="tabs tabs-border">
+                    {user.role === "organization" ? 
+                    <>
+                    <a role="tab" className={`tab ${activeTab === 1 ? "tab-active !bg-transparent" : ""}`} onClick={() => handleTabClick(1)}>
+                        Upcoming Events
+                    </a>
+                    <a role="tab" className={`tab ${activeTab === 2 ? "tab-active !bg-transparent" : ""}`} onClick={() => handleTabClick(2)}>
+                        Current Events
+                    </a> </>: <h2 className="card-title">Upcoming Events</h2>}
+                </div>
                 <div className='h-full overflow-y-hidden'>
                   <div className="overflow-x-auto h-full overflow-y-auto max-h-[400px]">
                     <table className="table table-auto w-full">
@@ -212,22 +237,59 @@ const aggregateHoursByMonth = (events) => {
                         </tr>
                       </thead>
                       <tbody>
-                        {user.role === "organization" 
-                          ? (upcomingOrganizationEvents.length > 0 ? upcomingOrganizationEvents.map((event, index) => {
-                              return (
-                                <tr className="hover:bg-gradient-to-r from-[#E0E0E0] to-[#D1B8F1] rounded-xl hover:shadow-lg" key={index}>
+                        {user.role === "organization" ? (
+                          // If user.role is "organization", show both upcoming and current events
+                          activeTab === 1 ? (
+                            // Show Upcoming Events when activeTab is 1
+                            upcomingOrganizationEvents.length > 0 ? (
+                              upcomingOrganizationEvents.map((event, index) => (
+                                <tr
+                                  className="hover:bg-gradient-to-r from-[#E0E0E0] to-[#D1B8F1] rounded-xl hover:shadow-lg"
+                                  key={index}
+                                >
                                   <td>{event.title}</td>
                                   <td>{event.location}</td>
                                   <td>{new Date(event.start_date).toLocaleDateString()}</td>
                                   <td>{formatTime(event.start_time)}</td>
                                 </tr>
-                              );
-                            }) : 
+                              ))
+                            ) : (
+                              <tr>
+                                <td colSpan="4" className="text-center">
+                                  No upcoming organization events
+                                </td>
+                              </tr>
+                            )
+                          ) : activeTab === 2 ? (
+                            // Show Current Events when activeTab is 2
+                            currentEvents.length > 0 ? (
+                              currentEvents.map((event, index) => (
+                                <tr
+                                  className="hover:bg-gradient-to-r from-[#E0E0E0] to-[#D1B8F1] rounded-xl hover:shadow-lg"
+                                  key={index}
+                                >
+                                  <td>{event.title}</td>
+                                  <td>{event.location}</td>
+                                  <td>{new Date(event.start_date).toLocaleDateString()}</td>
+                                  <td>{formatTime(event.start_time)}</td>
+                                </tr>
+                              ))
+                            ) : (
+                              <tr>
+                                <td colSpan="4" className="text-center">
+                                  No current organization events
+                                </td>
+                              </tr>
+                            )
+                          ) : (
+                            // Fallback for if neither tab is selected
                             <tr>
-                              <td colSpan="4" className="text-center">No upcoming organization events</td>
+                              <td colSpan="4" className="text-center">
+                                Select a tab
+                              </td>
                             </tr>
                           )
-                          : (upcomingEvents.length > 0 ? upcomingEvents.map((event, index) => {
+                        ) : (upcomingEvents.length > 0 ? upcomingEvents.map((event, index) => {
                               return (
                                 <tr className="hover:bg-gradient-to-r from-[#E0E0E0] to-[#D1B8F1] rounded-xl hover:shadow-lg" key={index}>
                                   <td>{event.title}</td>
@@ -276,8 +338,7 @@ const aggregateHoursByMonth = (events) => {
                               <th>Start Date</th>
                             </tr>
                           )}
-                        </thead>
-                        
+                        </thead> 
                         <tbody>
                           {user.role === 'organization'
                             ? organizationEvents
@@ -306,7 +367,7 @@ const aggregateHoursByMonth = (events) => {
                                   <td>{new Date(event.start_date).toLocaleDateString()}</td>
                                   <td>
                                     {new Date(event.start_date) > new Date() ? (
-                                      <div className="tooltip tooltip-top" data-tip="Available after event date">
+                                      <div className="tooltip tooltip-left" data-tip="Available after event date">
                                         <button className="btn btn-disabled">
                                           Log Hours
                                         </button>

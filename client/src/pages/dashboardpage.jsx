@@ -39,6 +39,7 @@ function DashboardPage() {
               Create Event
             </a> : null}
           </div>
+          
           { user.role === 'organization' ? <div className="flex flex-row justify-center gap-10 mt-10 lg:justify-start">
             {activeTab === 1 ? eventHeaders.map((event) => {
               const isActive = currentEventView === event.id;
