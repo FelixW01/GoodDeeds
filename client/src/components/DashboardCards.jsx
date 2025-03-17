@@ -20,30 +20,35 @@ function DashboardCards({user, formatTime, currentEventView, setEventHeaders}) {
 
 // Gather all the hours worked by month
 const aggregateHoursByMonth = (events) => {
-    const currentMonth = new Date().getMonth();
-    // This creates an array with 6 empty slots and fill it with 0 as the starting
-    const lastSixMonths = Array(6).fill(0);
-    const lastSixMonthsVolunteers = Array(6).fill(0);
+  const currentMonth = new Date().getMonth();
+  // This creates an array with 6 empty slots and fills it with 0 as the starting point
+  const lastSixMonths = Array(6).fill(0);
+  const lastSixMonthsVolunteers = Array(6).fill(0);
 
-    events.forEach(event => {
-      // Check if event has hours logged
-      console.log(event, '<< event here')
-      if (event.hours_worked || event.volunteer_names.length > 0) {
-        const eventMonth = new Date(event.start_date).getUTCMonth();
-        // Calculate the difference in months between the current month and the event month
-        const monthDiff = (currentMonth - eventMonth + 12) % 12;
-        // Only consider events within the last 6 months
-        if (monthDiff < 6) {
-          // Adds the event hours worked and adds it to the corresponding month
-          lastSixMonths[5 - monthDiff] += parseFloat(event.hours_worked);
-          lastSixMonthsVolunteers[5 - monthDiff] += event.volunteer_names.length;
-        }
+  events.forEach(event => {
+      // Check if the event has hours worked or volunteer names (if it exists)
+      const hasVolunteers = Array.isArray(event.volunteer_names) && event.volunteer_names.length > 0;
+      if (event.hours_worked || hasVolunteers) {
+          const eventMonth = new Date(event.start_date).getUTCMonth();
+          // Calculate the difference in months between the current month and the event month
+          const monthDiff = (currentMonth - eventMonth + 12) % 12;
+          // Only consider events within the last 6 months
+          if (monthDiff < 6) {
+              // Add the event hours worked and add it to the corresponding month
+              if (event.hours_worked) {
+                  lastSixMonths[5 - monthDiff] += parseFloat(event.hours_worked);
+              }
+              // Add the number of volunteers (if available) and add it to the corresponding month
+              if (hasVolunteers) {
+                  lastSixMonthsVolunteers[5 - monthDiff] += event.volunteer_names.length;
+              }
+          }
       }
-    });
+  });
 
-    setMonthlyHours(lastSixMonths);
-    setMonthlyVolunteerCounts(lastSixMonthsVolunteers);
-  };
+  setMonthlyHours(lastSixMonths);
+  setMonthlyVolunteerCounts(lastSixMonthsVolunteers);
+};
 
   // console.log(monthlyVolunteerCounts, '<< monthly Volunteer counts')
 
@@ -199,7 +204,6 @@ const aggregateHoursByMonth = (events) => {
     } 
 }, [userEvents, organizationEvents]);
 
-  currentEvents ? console.log(currentEvents, '<< current events') : console.log('No current events')
   return (
     <>
         <div className="flex flex-col lg:flex-row justify-center items-center my-10 gap-10 lg:h-80 xl:h-3/4"> 
@@ -218,12 +222,14 @@ const aggregateHoursByMonth = (events) => {
                 <div role="tablist" className="tabs tabs-border">
                     {user.role === "organization" ? 
                     <>
-                    <a role="tab" className={`tab ${activeTab === 2 ? "tab-active !bg-transparent" : ""}`} onClick={() => handleTabClick(2)}>
-                        Current Events
-                    </a> </>: <h2 className="card-title">Upcoming Events</h2>}
-                    <a role="tab" className={`tab ${activeTab === 1 ? "tab-active !bg-transparent" : ""}`} onClick={() => handleTabClick(1)}>
-                        Upcoming Events
-                    </a>
+                      <a role="tab" className={`tab ${activeTab === 2 ? "tab-active !bg-transparent" : ""}`} onClick={() => handleTabClick(2)}>
+                          Current Events
+                      </a> 
+                      <a role="tab" className={`tab ${activeTab === 1 ? "tab-active !bg-transparent" : ""}`} onClick={() => handleTabClick(1)}>
+                          Upcoming Events
+                      </a>
+                    </> : 
+                    <h2 className="card-title">Upcoming Events</h2>} 
                 </div>
                 <div className='h-full overflow-y-hidden'>
                   <div className="overflow-x-auto h-full overflow-y-auto max-h-[400px]">

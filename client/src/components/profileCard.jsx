@@ -144,7 +144,9 @@ const ProfilePage = () => {
         }
       };
     }, [selectedFile]);
+    
     user ? console.log('User:', user): null;
+
   return (
     <>
     {!isLoading ? 
