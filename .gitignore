@@ -25,3 +25,8 @@ dist-ssr
 *.sw?
 
 server/uploads/
+
+# Cypress
+/cypress/downloads/
+/cypress/screenshots/
+/cypress/videos/
