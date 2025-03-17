@@ -1,5 +1,5 @@
 import React, { useState, useRef, useContext, useEffect } from 'react';
-import { UserContext } from '../../context/UserContext';
+import { UserContext } from '../../context/userContext';
 
 const ProfilePage = () => {
   // User context and state
