@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { UserContext } from '../../context/UserContext'; // Adjust the import path as needed
+import { UserContext } from '../../context/userContext';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 

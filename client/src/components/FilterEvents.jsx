@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { useEventContext } from '../../context/eventContext';
-import { UserContext } from '../../context/UserContext';
+import { UserContext } from '../../context/userContext';
 
 const FilterEvents = () => {
     const { user } = useContext(UserContext); // Get the user from UserContext
