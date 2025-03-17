@@ -65,11 +65,7 @@ function Navbar() {
               <ul
                   tabIndex={0}
                   className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow text-black">
-                  <li>
-                      <a className="justify-between">
-                          Profile
-                      </a>
-                  </li>
+                  <li><Link to="/profile">Profile</Link></li>
                   <li onClick={handleLogOut}><a>Logout</a></li>
               </ul>
           </div>
@@ -114,11 +110,7 @@ function Navbar() {
                     <ul
                         tabIndex={0}
                         className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow text-black">
-                        <li>
-                            <a className="justify-between">
-                                Profile
-                            </a>
-                        </li>
+                        <li><Link to="/profile">Profile</Link></li>
                         <li onClick={handleLogOut}><a>Logout</a></li>
                     </ul>
                 </div>
