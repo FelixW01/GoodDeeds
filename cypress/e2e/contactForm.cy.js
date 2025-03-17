@@ -1,7 +1,7 @@
 describe('ContactForm Tests', () => {
     beforeEach(() => {
         // Visit the page where the ContactForm is rendered
-        cy.visit('http://localhost:5173/');
+        cy.visit('/');
     });
 
     it('Renders the ContactForm component', () => {

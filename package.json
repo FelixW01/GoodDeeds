@@ -35,5 +35,8 @@
     "cypress": "^14.2.0",
     "nodemon": "^3.1.9",
     "vitest": "^3.0.9"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7"
   }
 }

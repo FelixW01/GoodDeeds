@@ -1,7 +1,7 @@
 describe('SignUpPage Tests', () => {
     beforeEach(() => {
         // Visit the signup page before each test
-        cy.visit('http://localhost:5173/signup');
+        cy.visit('/signup');
     });
 
     it('Renders the SignUpPage correctly', () => {

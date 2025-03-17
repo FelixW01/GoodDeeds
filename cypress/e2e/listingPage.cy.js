@@ -1,17 +1,17 @@
 describe('ListingPage Tests', () => {
     const user = {
-        email: 'johnd@gmail.com', // Predefined user email
-        password: 'password1234', // Predefined user password
+        email: Cypress.env('userEmail'), // Use environment variable for user email
+        password: Cypress.env('userPass'), // Use environment variable for user password
     };
 
     const organizationUser = {
-        email: 'org@example.com', // Predefined organization email
-        password: 'securepassword123', // Predefined organization password
+        email: Cypress.env('orgEmail'), // Use environment variable for organization email
+        password: Cypress.env('orgPass'), // Use environment variable for organization password
     };
 
     beforeEach(() => {
         // Visit the listing page before each test
-        cy.visit('http://localhost:5173/listing');
+        cy.visit('/listing'); // Use baseUrl from Cypress config
     });
 
     it('Renders the ListingPage correctly for non-logged-in users', () => {
@@ -48,7 +48,7 @@ describe('ListingPage Tests', () => {
 
     it('Renders the ListingPage correctly for logged-in users (volunteers)', () => {
         // Log in as a user (volunteer)
-        cy.visit('http://localhost:5173/login');
+        cy.visit('/login'); // Use baseUrl from Cypress config
         cy.get('input[name="email"]').type(user.email);
         cy.get('input[name="password"]').type(user.password);
         cy.get('button.bg-\\[\\#7539C2\\]').contains('Login').click();
@@ -57,7 +57,7 @@ describe('ListingPage Tests', () => {
         cy.url().should('include', '/dashboard');
 
         // Go back to the listing page
-        cy.visit('http://localhost:5173/listing');
+        cy.visit('/listing'); // Use baseUrl from Cypress config
 
         // Check if the filter dropdowns exist (5 for logged-in users)
         cy.get('select').should('have.length', 5); // 5 filter dropdowns
@@ -73,7 +73,7 @@ describe('ListingPage Tests', () => {
 
     it('Successfully registers for an event and updates the button to green', () => {
         // Log in as a user (volunteer)
-        cy.visit('http://localhost:5173/login');
+        cy.visit('/login'); // Use baseUrl from Cypress config
         cy.get('input[name="email"]').type(user.email);
         cy.get('input[name="password"]').type(user.password);
         cy.get('button.bg-\\[\\#7539C2\\]').contains('Login').click();
@@ -82,7 +82,7 @@ describe('ListingPage Tests', () => {
         cy.url().should('include', '/dashboard');
 
         // Go back to the listing page
-        cy.visit('http://localhost:5173/listing');
+        cy.visit('/listing'); // Use baseUrl from Cypress config
 
         // Mock the API response for successful registration
         cy.intercept('POST', '/api/user-events/register', {
@@ -106,7 +106,7 @@ describe('ListingPage Tests', () => {
 
     it('Successfully registers for an event and verifies the count on the dashboard', () => {
         // Log in as a user (volunteer)
-        cy.visit('http://localhost:5173/login');
+        cy.visit('/login'); // Use baseUrl from Cypress config
         cy.get('input[name="email"]').type(user.email);
         cy.get('input[name="password"]').type(user.password);
         cy.get('button.bg-\\[\\#7539C2\\]').contains('Login').click();
@@ -115,7 +115,7 @@ describe('ListingPage Tests', () => {
         cy.url().should('include', '/dashboard');
 
         // Go back to the listing page
-        cy.visit('http://localhost:5173/listing');
+        cy.visit('/listing'); // Use baseUrl from Cypress config
 
         // Mock the API response for successful registration
         cy.intercept('POST', '/api/user-events/register', {
@@ -137,7 +137,7 @@ describe('ListingPage Tests', () => {
         });
 
         // Navigate to the dashboard
-        cy.visit('http://localhost:5173/dashboard');
+        cy.visit('/dashboard'); // Use baseUrl from Cypress config
 
         // Verify the count of registered events on the dashboard
         cy.get('.card').should('exist'); // Ensure event cards are rendered
@@ -149,7 +149,7 @@ describe('ListingPage Tests', () => {
 
     it('Renders the ListingPage correctly for logged-in organization users', () => {
         // Log in as an organization
-        cy.visit('http://localhost:5173/login');
+        cy.visit('/login'); // Use baseUrl from Cypress config
         cy.get('input[name="email"]').type(organizationUser.email);
         cy.get('input[name="password"]').type(organizationUser.password);
         cy.get('button.bg-\\[\\#7539C2\\]').contains('Login').click();
@@ -158,7 +158,7 @@ describe('ListingPage Tests', () => {
         cy.url().should('include', '/dashboard');
 
         // Go back to the listing page
-        cy.visit('http://localhost:5173/listing');
+        cy.visit('/listing'); // Use baseUrl from Cypress config
 
         // Check if the filter dropdowns exist (4 for organization users)
         cy.get('select').should('have.length', 4); // 4 filter dropdowns

@@ -1,7 +1,7 @@
 describe('Footer Tests', () => {
     beforeEach(() => {
         // Visit the home page before each test
-        cy.visit('http://localhost:5173/');
+        cy.visit('/');
     });
 
     it('Renders the Footer correctly', () => {
