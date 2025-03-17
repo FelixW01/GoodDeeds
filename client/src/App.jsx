@@ -6,6 +6,7 @@ import CreateListPage from './pages/createlistingpage';
 import LoginPage from './pages/loginpage';
 import SignUpPage from './pages/signuppage';
 import ListingPage from './pages/listingpage';
+import ProfilePage from './pages/profilepage';
 import Layout from "./pages/layout.jsx"
 import { UserProvider } from '../context/userContext';
 
@@ -23,6 +24,7 @@ function App() {
             <Route path="/signup" element={<SignUpPage />}/>
             <Route path="/signuporg" element={<SignUpPage />}/>
             <Route path="/listing" element={<ListingPage />}/>
+            <Route path="/profile" element={<ProfilePage />}/>
             <Route path="*" element={<Error />}/>
           </Route>
       </Routes>
