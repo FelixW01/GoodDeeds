@@ -29,7 +29,7 @@ const EventCard = ({ event, loading }) => {
 
     // Determine if the event is inactive based on the current date
     const currentDate = new Date();
-    const eventStartDate = new Date(event.start_date);
+    const eventStartDate = new Date(event.end_date);
     const isInactive = eventStartDate < currentDate || event.status.toLowerCase() !== 'active';
 
     // Handle registration

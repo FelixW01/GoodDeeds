@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 
 function DashboardCards({user, formatTime, currentEventView, setEventHeaders}) {
   const [monthlyHours, setMonthlyHours] = useState(Array(6).fill(0));
+  const [monthlyVolunteerCounts, setMonthlyVolunteerCounts] = useState(Array(6).fill(0));
 
   // This returns the month labels for the chart, the last 6 months
   const getMonthLabels = () => {
@@ -22,10 +23,12 @@ const aggregateHoursByMonth = (events) => {
     const currentMonth = new Date().getMonth();
     // This creates an array with 6 empty slots and fill it with 0 as the starting
     const lastSixMonths = Array(6).fill(0);
+    const lastSixMonthsVolunteers = Array(6).fill(0);
 
     events.forEach(event => {
       // Check if event has hours logged
-      if (event.hours_worked) {
+      console.log(event, '<< event here')
+      if (event.hours_worked || event.volunteer_names.length > 0) {
         const eventMonth = new Date(event.start_date).getUTCMonth();
         // Calculate the difference in months between the current month and the event month
         const monthDiff = (currentMonth - eventMonth + 12) % 12;
@@ -33,28 +36,38 @@ const aggregateHoursByMonth = (events) => {
         if (monthDiff < 6) {
           // Adds the event hours worked and adds it to the corresponding month
           lastSixMonths[5 - monthDiff] += parseFloat(event.hours_worked);
+          lastSixMonthsVolunteers[5 - monthDiff] += event.volunteer_names.length;
         }
       }
     });
-    console.log(lastSixMonths, '<< last six months')
+
     setMonthlyHours(lastSixMonths);
+    setMonthlyVolunteerCounts(lastSixMonthsVolunteers);
   };
 
-  // console.log(monthlyHours, '<< monthly hours')
+  // console.log(monthlyVolunteerCounts, '<< monthly Volunteer counts')
+
   const data = {
     labels: getMonthLabels(),
     datasets: [
       {
         label: user.role === "organization" ? "Volunteers" : "Volunteer Hours",
-        data: monthlyHours,
+        data: user.role === "organization" ? monthlyVolunteerCounts : monthlyHours,
         borderColor: "#BFDBF7",
         backgroundColor: "#BFDBF7",
       },  
     ],
   };
 
-  const options = {
+ const options = {
     responsive: true,
+    scales: {
+          y: {
+              type: 'linear',
+              position: 'left',
+              beginAtZero: true,
+          }
+      }
   };
 
   let volunteerCounter = 1;
@@ -66,6 +79,12 @@ const aggregateHoursByMonth = (events) => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [volunteerHours, setVolunteerHours] = useState(0);
+  const [currentEvents, setCurrentEvents] = useState([]);
+  const [activeTab, setActiveTab] = useState(2);
+
+  const handleTabClick = (tabIndex) => {
+    setActiveTab(tabIndex);
+  };
 
   const openModal = (event) => {
     setSelectedEvent(event);
@@ -94,8 +113,11 @@ const aggregateHoursByMonth = (events) => {
                   id: event.event_id,
               };
           });
+          console.log(response.data, '<< organization events')
           setOrganizationEvents(response.data);
           setEventHeaders(eventHeaders);
+
+          aggregateHoursByMonth(response.data);
       } catch (error) {
           console.error('Error fetching user events:', error);
       }
@@ -120,6 +142,9 @@ const aggregateHoursByMonth = (events) => {
         console.log(response.data);
         setVolunteerHours('');
         closeModal();
+
+        // Refetch user events to update chart data
+        getUserEvents();
       } catch (error) {
         console.error('Error updating hours:', error);
       }
@@ -133,6 +158,7 @@ const aggregateHoursByMonth = (events) => {
         twoWeeksFromNow.setDate(today.getDate() + 14);
 
         let filteredUpcomingEvents = [];
+        let filteredCurrentEvents = [];
 
         if (user.role === 'organization') {
             // Filter organization events if role is 'organization'
@@ -140,13 +166,22 @@ const aggregateHoursByMonth = (events) => {
                 const eventStartDate = new Date(event.start_date);
                 return eventStartDate >= today && eventStartDate <= twoWeeksFromNow;
             });
+
+            filteredCurrentEvents = organizationEvents.filter(event => {
+                const eventStartDate = new Date(event.start_date);
+                const eventEndDate = new Date(event.end_date);
+                return eventStartDate <= today && eventEndDate >= today;
+            });
+
             setUpcomingOrganizationEvents(filteredUpcomingEvents);
+            setCurrentEvents(filteredCurrentEvents);
         } else {
             // Filter user events if role is not 'organization'
             filteredUpcomingEvents = userEvents.filter(event => {
                 const eventStartDate = new Date(event.start_date);
                 return eventStartDate >= today && eventStartDate <= twoWeeksFromNow;
             });
+
             setUpcomingEvents(filteredUpcomingEvents);
         }
       } catch (error) {
@@ -164,7 +199,7 @@ const aggregateHoursByMonth = (events) => {
     } 
 }, [userEvents, organizationEvents]);
 
-
+  currentEvents ? console.log(currentEvents, '<< current events') : console.log('No current events')
   return (
     <>
         <div className="flex flex-col lg:flex-row justify-center items-center my-10 gap-10 lg:h-80 xl:h-3/4"> 
@@ -172,7 +207,7 @@ const aggregateHoursByMonth = (events) => {
             {/* Line graph */}
             <div className="card card-border flex-1 h-full w-full lg:max-w-[50%]"> 
               <div className="card-body rounded-lg h-full">
-                <h2 className="card-title">{user.role === 'user' ? 'Volunteer Hours' : 'Volunteer Statistics'}</h2>
+                <h2 className="card-title">{user.role === 'user' ? 'Volunteer Hours' : 'Number of Volunteers'}</h2>
                 <Line data={data} options={options} className="h-full" /> 
               </div>
             </div>
@@ -180,7 +215,16 @@ const aggregateHoursByMonth = (events) => {
             {/* Upcoming event table  */}  
             <div className="card card-border flex-1 h-full w-full lg:max-w-[50%]"> 
               <div className="card-body bg-base-300 rounded-lg h-full bg-gradient-to-r from-[#F7F7F7] to-[#E5D8F5]">
-                <h2 className="card-title">Upcoming Events</h2>
+                <div role="tablist" className="tabs tabs-border">
+                    {user.role === "organization" ? 
+                    <>
+                    <a role="tab" className={`tab ${activeTab === 2 ? "tab-active !bg-transparent" : ""}`} onClick={() => handleTabClick(2)}>
+                        Current Events
+                    </a> </>: <h2 className="card-title">Upcoming Events</h2>}
+                    <a role="tab" className={`tab ${activeTab === 1 ? "tab-active !bg-transparent" : ""}`} onClick={() => handleTabClick(1)}>
+                        Upcoming Events
+                    </a>
+                </div>
                 <div className='h-full overflow-y-hidden'>
                   <div className="overflow-x-auto h-full overflow-y-auto max-h-[400px]">
                     <table className="table table-auto w-full">
@@ -193,22 +237,59 @@ const aggregateHoursByMonth = (events) => {
                         </tr>
                       </thead>
                       <tbody>
-                        {user.role === "organization" 
-                          ? (upcomingOrganizationEvents.length > 0 ? upcomingOrganizationEvents.map((event, index) => {
-                              return (
-                                <tr className="hover:bg-gradient-to-r from-[#E0E0E0] to-[#D1B8F1] rounded-xl hover:shadow-lg" key={index}>
+                        {user.role === "organization" ? (
+                          // If user.role is "organization", show both upcoming and current events
+                          activeTab === 1 ? (
+                            // Show Upcoming Events when activeTab is 1
+                            upcomingOrganizationEvents.length > 0 ? (
+                              upcomingOrganizationEvents.map((event, index) => (
+                                <tr
+                                  className="hover:bg-gradient-to-r from-[#E0E0E0] to-[#D1B8F1] rounded-xl hover:shadow-lg"
+                                  key={index}
+                                >
                                   <td>{event.title}</td>
                                   <td>{event.location}</td>
                                   <td>{new Date(event.start_date).toLocaleDateString()}</td>
                                   <td>{formatTime(event.start_time)}</td>
                                 </tr>
-                              );
-                            }) : 
+                              ))
+                            ) : (
+                              <tr>
+                                <td colSpan="4" className="text-center">
+                                  No upcoming organization events
+                                </td>
+                              </tr>
+                            )
+                          ) : activeTab === 2 ? (
+                            // Show Current Events when activeTab is 2
+                            currentEvents.length > 0 ? (
+                              currentEvents.map((event, index) => (
+                                <tr
+                                  className="hover:bg-gradient-to-r from-[#E0E0E0] to-[#D1B8F1] rounded-xl hover:shadow-lg"
+                                  key={index}
+                                >
+                                  <td>{event.title}</td>
+                                  <td>{event.location}</td>
+                                  <td>{new Date(event.start_date).toLocaleDateString()}</td>
+                                  <td>{formatTime(event.start_time)}</td>
+                                </tr>
+                              ))
+                            ) : (
+                              <tr>
+                                <td colSpan="4" className="text-center">
+                                  No current organization events
+                                </td>
+                              </tr>
+                            )
+                          ) : (
+                            // Fallback for if neither tab is selected
                             <tr>
-                              <td colSpan="4" className="text-center">No upcoming organization events</td>
+                              <td colSpan="4" className="text-center">
+                                Select a tab
+                              </td>
                             </tr>
                           )
-                          : (upcomingEvents.length > 0 ? upcomingEvents.map((event, index) => {
+                        ) : (upcomingEvents.length > 0 ? upcomingEvents.map((event, index) => {
                               return (
                                 <tr className="hover:bg-gradient-to-r from-[#E0E0E0] to-[#D1B8F1] rounded-xl hover:shadow-lg" key={index}>
                                   <td>{event.title}</td>
@@ -257,8 +338,7 @@ const aggregateHoursByMonth = (events) => {
                               <th>Start Date</th>
                             </tr>
                           )}
-                        </thead>
-                        
+                        </thead> 
                         <tbody>
                           {user.role === 'organization'
                             ? organizationEvents
@@ -285,7 +365,19 @@ const aggregateHoursByMonth = (events) => {
                                   <td>{event.contact_email}</td>
                                   <td>{event.location}</td>
                                   <td>{new Date(event.start_date).toLocaleDateString()}</td>
-                                  <td><button className="btn bg-blue-300 text-black " onClick={() => openModal(event)}>Log Hours</button></td>                      
+                                  <td>
+                                    {new Date(event.start_date) > new Date() ? (
+                                      <div className="tooltip tooltip-left" data-tip="Available after event date">
+                                        <button className="btn btn-disabled">
+                                          Log Hours
+                                        </button>
+                                      </div>
+                                    ) : (
+                                      <button className="btn btn-primary" onClick={() => openModal(event)}>
+                                        Log Hours
+                                      </button>
+                                    )}
+                                  </td>           
                                 </tr>
                               ))}
                         </tbody>

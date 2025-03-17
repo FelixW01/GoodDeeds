@@ -2,7 +2,8 @@ import { useState } from "react";
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 
-const CreateEventCard = () => {
+const CreateEventCard = ({setActiveTab}) => {
+
   const [formData, setFormData] = useState({
       title: "",
       description: "",
@@ -118,6 +119,7 @@ const CreateEventCard = () => {
       location: fullAddress,
     };
 
+    setActiveTab(1);
     try {
       const response = await axios.post('/api/events/create', eventData);
       console.log("Event created:", response.data);
