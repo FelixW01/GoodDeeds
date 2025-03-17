@@ -12,7 +12,12 @@
     "start": "cd server && node server.js",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "server": "cd server && nodemon server.js",
-    "client": "cd client && npm run dev"
+    "client": "cd client && npm run dev",
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
+    "cy:run-chrome": "cypress run --browser chrome",
+    "cy:open-chrome": "cypress open --browser chrome",
+    "test:e2e": "concurrently \"npm run dev\" \"npm run cy:open-chrome\""
   },
   "repository": {
     "type": "git",
@@ -25,9 +30,13 @@
     "url": "https://github.com/FelixW01/DysonAI/issues"
   },
   "homepage": "https://github.com/FelixW01/DysonAI#readme",
-  "dependencies": {},
   "devDependencies": {
     "concurrently": "^9.1.2",
-    "nodemon": "^3.1.9"
+    "cypress": "^14.2.0",
+    "nodemon": "^3.1.9",
+    "vitest": "^3.0.9"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7"
   }
 }
