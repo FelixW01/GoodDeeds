@@ -21,16 +21,15 @@ const ProfilePage = () => {
 
   // Initialize form data when user is loaded
   useEffect(() => {
-    if (user) {
-      setFormData({
-        first_name: user.first_name || '',
-        last_name: user.last_name || '',
-        email: user.email || '',
-        profile_picture: user.profile_picture || '',
-      });
-      setIsLoading(false);
-    } else {
-      setIsLoading(true);
+  if (user) {
+    setFormData({
+      first_name: user.first_name || '',
+      last_name: user.last_name || '',
+      email: user.email || '',
+      profile_picture: user.profile_picture || '',
+    });
+
+     setIsLoading(false);
     }
   }, [user]);
 
@@ -102,8 +101,8 @@ const ProfilePage = () => {
       if (result) {
         setUser({
             ...formData,
-            total_hours_worked: Number(user.total_hours_worked), 
-            total_events_attended: Number(user.total_events_attended)
+            total_hours_worked: Number(user?.total_hours_worked) || 0, 
+            total_events_attended: Number(user?.total_events_attended) || 0
         });
         }
      
@@ -144,12 +143,12 @@ const ProfilePage = () => {
         }
       };
     }, [selectedFile]);
-    
-    user ? console.log('User:', user): null;
 
+  console.log( isLoading, "<<< loading ?");
+  console.log(user, '<<< user');
   return (
     <>
-    {!isLoading ? 
+    {!isLoading && user ? 
     <div className="min-h-screen bg-base-200 py-8">
       <div className="max-w-4xl mx-auto">
         {/* Header with toggle edit button */}
@@ -257,23 +256,6 @@ const ProfilePage = () => {
             <div className="card bg-base-100 shadow-xl mb-6">
               <div className="card-body">
                 <h2 className="card-title text-xl">Contact Information</h2>
-                {isEditing ? (
-                  <>
-                    <div className="form-control w-full">
-                      <label className="label">
-                        <span className="label-text">Email</span>
-                      </label>
-                      <input
-                        type="email"
-                        name="email"
-                        placeholder="Email Address"
-                        className="input input-bordered w-full"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                  </>
-                ) : (
                   <div className="space-y-2">
                     <div className="flex items-center">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -282,7 +264,6 @@ const ProfilePage = () => {
                       <span>{user.email}</span>
                     </div>
                   </div>
-                )}
               </div>
             </div>
             
@@ -296,7 +277,7 @@ const ProfilePage = () => {
                       <i className="fa-solid fa-clock text-2xl"></i>
                     </div>
                     <div className="stat-title">Hours Volunteered</div>
-                    <div className="stat-value text-primary">{parseInt(user.total_hours_worked)}</div>
+                    <div className="stat-value text-primary">{Number(user?.total_hours_worked) || 0}</div>
                   </div>
                   
                   <div className="stat">

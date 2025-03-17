@@ -36,7 +36,7 @@ const UserProvider = ({ children }) => {
 
   const login = async (userData) => {
       const response = await axios.post('/api/login', userData);
-      setUser (response.data);
+      await getMe(); 
       setError(null);
       toast.success(`Welcome, ${capitalize(response.data.first_name)} ${capitalize(response.data.last_name)} `)
   };
