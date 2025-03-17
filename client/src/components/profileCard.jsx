@@ -1,5 +1,6 @@
 import React, { useState, useRef, useContext, useEffect } from 'react';
 import { UserContext } from '../../context/userContext';
+import axios from 'axios';
 
 const ProfilePage = () => {
   // User context and state
@@ -10,6 +11,7 @@ const ProfilePage = () => {
   const [saveStatus, setSaveStatus] = useState(null);
   const fileInputRef = useRef(null);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [organizationEvents, setOrganizationEvents] = useState([]);
   
   // Form state for editing mode
   const [formData, setFormData] = useState({
@@ -28,7 +30,7 @@ const ProfilePage = () => {
       email: user.email || '',
       profile_picture: user.profile_picture || '',
     });
-
+     getOrganization();
      setIsLoading(false);
     }
   }, [user]);
@@ -135,6 +137,17 @@ const ProfilePage = () => {
     }
   };
   
+  const getOrganization = async () => {
+      try {
+          const response = await axios.get('/api/events/org/get');
+
+          console.log(response.data, '<< organization events')
+          setOrganizationEvents(response.data);
+      } catch (error) {
+          console.error('Error fetching user events:', error);
+      }
+  };
+
   // Cleanup object URL when component unmounts to avoid memory leaks
   useEffect(() => {
     return () => {
@@ -144,6 +157,7 @@ const ProfilePage = () => {
       };
     }, [selectedFile]);
 
+    organizationEvents ? console.log(organizationEvents) : console.log('no organization events')
 
   return (
     <>
@@ -275,17 +289,26 @@ const ProfilePage = () => {
                     <div className="stat-figure text-primary">
                       <i className="fa-solid fa-clock text-2xl"></i>
                     </div>
-                    <div className="stat-title">Hours Volunteered</div>
-                    <div className="stat-value text-primary">{Number(user?.total_hours_worked) || 0}</div>
+                    {user.role === "organization" ? 
+                      <>
+                        <div className="stat-title">Events Hosted</div>
+                        <div className="stat-value text-primary">{organizationEvents?.length || 0}</div>
+                      </> : 
+                      <>
+                        <div className="stat-title">Hours Volunteered</div>
+                        <div className="stat-value text-primary">{Number(user?.total_hours_worked) || 0}</div>
+                      </>
+                    }
                   </div>
-                  
+                  {user.role !== "organization" ? 
                   <div className="stat">
                     <div className="stat-figure text-secondary">
                       <i className="fa-solid fa-handshake-angle text-2xl"></i>
                     </div>
-                    <div className="stat-title">Events Joined</div>
-                    <div className="stat-value text-secondary">{user.total_events_attended || 0}</div>
+                      <div className="stat-title">Events Joined</div>
+                      <div className="stat-value text-secondary">{user.total_events_attended || 0}</div> 
                   </div>
+                  : null}
                 </div>
               </div>
             </div>

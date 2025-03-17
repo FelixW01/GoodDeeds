@@ -225,9 +225,7 @@ const aggregateHoursByMonth = (events) => {
     } 
 }, [userEvents, organizationEvents]);
 
-  currentEvents ? console.log(currentEvents, '<< user events') : null
-  console.log(userEvents)
-  console.log(organizationEvents)
+
   return (
     <>
         <div className="flex flex-col lg:flex-row justify-center items-center my-10 gap-10 lg:h-80 xl:h-3/4"> 
