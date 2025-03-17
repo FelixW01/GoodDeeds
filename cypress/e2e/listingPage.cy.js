@@ -104,6 +104,49 @@ describe('ListingPage Tests', () => {
         });
     });
 
+    it('Successfully registers for an event and verifies the count on the dashboard', () => {
+        // Log in as a user (volunteer)
+        cy.visit('http://localhost:5173/login');
+        cy.get('input[name="email"]').type(user.email);
+        cy.get('input[name="password"]').type(user.password);
+        cy.get('button.bg-\\[\\#7539C2\\]').contains('Login').click();
+
+        // Verify the dashboard content for a user (volunteer)
+        cy.url().should('include', '/dashboard');
+
+        // Go back to the listing page
+        cy.visit('http://localhost:5173/listing');
+
+        // Mock the API response for successful registration
+        cy.intercept('POST', '/api/user-events/register', {
+            statusCode: 201,
+            body: { message: 'Successfully registered for the event!' },
+        }).as('registerEvent');
+
+        // Click the "Register to Volunteer" button on an active event
+        cy.get('.card').first().within(() => {
+            cy.contains('Register to Volunteer').click();
+        });
+
+        // Wait for the registration to complete
+        cy.wait('@registerEvent');
+
+        // Check if the button turns green and displays "You Registered"
+        cy.get('.card').first().within(() => {
+            cy.get('button.bg-green-500').contains('You Registered').should('exist');
+        });
+
+        // Navigate to the dashboard
+        cy.visit('http://localhost:5173/dashboard');
+
+        // Verify the count of registered events on the dashboard
+        cy.get('.card').should('exist'); // Ensure event cards are rendered
+        cy.get('.card').its('length').then((initialCount) => {
+            // After registration, the count should increase by 1
+            cy.get('.card').should('have.length', initialCount);
+        });
+    });
+
     it('Renders the ListingPage correctly for logged-in organization users', () => {
         // Log in as an organization
         cy.visit('http://localhost:5173/login');
