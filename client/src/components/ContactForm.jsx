@@ -5,18 +5,28 @@ const ContactForm = () => {
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
     const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(false);
 
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!name || !email || !message) {
             setError('Please fill out all fields');
+            setSuccess(false); // Ensure success alert is hidden
         } else {
-            // Send the form data to the server
+            // Simulate form submission (replace with actual API call)
             console.log('Form submitted:', name, email, message);
             setError(null);
+            setSuccess(true); // Show success alert
+
+            // Reset form fields
             setName('');
             setEmail('');
             setMessage('');
+
+            // Hide success alert after 1 second
+            setTimeout(() => {
+                setSuccess(false);
+            }, 1000);
         }
     };
 
@@ -32,7 +42,7 @@ const ContactForm = () => {
                     </div>
                     <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
                         <div className="card-body">
-                            <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
+                            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                                 <div className="form-control">
                                     <label className="label">
                                         <span className="label-text text-black">Name</span>
@@ -71,6 +81,11 @@ const ContactForm = () => {
                                 {error && (
                                     <div className="alert alert-error">
                                         <span>{error}</span>
+                                    </div>
+                                )}
+                                {success && (
+                                    <div className="alert alert-success">
+                                        <span>Form submitted successfully!</span>
                                     </div>
                                 )}
                                 <button

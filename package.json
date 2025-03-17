@@ -17,7 +17,7 @@
     "cy:run": "cypress run",
     "cy:run-chrome": "cypress run --browser chrome",
     "cy:open-chrome": "cypress open --browser chrome",
-    "test:e2e": "concurrently \"npm run server\" \"npm run cy:open-chrome\""
+    "test:e2e": "concurrently \"npm run dev\" \"npm run cy:open-chrome\""
   },
   "repository": {
     "type": "git",
