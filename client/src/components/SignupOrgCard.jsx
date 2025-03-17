@@ -40,15 +40,14 @@ function SignUpOrgCard() {
     if (!emailPattern.test(formData[field])) {
       setError(`Invalid ${field.replace('_', ' ')}: ${formData[field]}`);
       return;
-     }
     }
+  }
 
     try {
-      const response = await axios.post('/api/events/create', formData);
-      console.log('Event created:', response.data);
-
-      toast.success('Eventcreated successfully!');
-
+      const response = await axios.post('/api/organizations/create', formData);
+      console.log('Organization account created:', response.data);
+      toast.success('Account created successfully!');
+      navigate('/login');
     } catch (err) {
       console.error('Error creating organization account:', err.response?.data || err.message);
       setError(err.response?.data?.message || 'Something went wrong');
@@ -58,11 +57,11 @@ function SignUpOrgCard() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[90vh]">
-      <div className="hero bg-base-200 min-h-screen lg:min-h-[80vh] lg:max-w-[80%] bg-[url('/img/volunteer-login.png')] bg-cover bg-center backdrop-blur-sm">
+      <div className="hero bg-base-200 min-h-[70vh] max-w-[80%] bg-[url('/img/volunteer-login.png')] bg-cover bg-center backdrop-blur-sm">
         <div className="hero-content flex-col lg:flex-row-reverse">
           <div className="text-center lg:text-left relative z-10">
             <div className="bg-black bg-opacity-55 backdrop-blur-sm p-6 rounded-lg shadow-lg">
-              <h1 className="text-3xl lg:text-5xl md:text-4xl font-bold text-white">
+              <h1 className="lg:text-5xl font-bold text-white text-4xl">
                 Register your organization today!
               </h1>
               <p className="py-6 text-lg text-white">

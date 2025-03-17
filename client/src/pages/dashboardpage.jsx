@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import DashboardCards from "../components/DashboardCards";
 import { UserContext } from '../../context/userContext';
 import CreateEventCard from "../components/CreateEventCard";
@@ -6,8 +6,8 @@ import CreateEventCard from "../components/CreateEventCard";
 function DashboardPage() {
   const [activeTab, setActiveTab] = useState(1);
   const [eventHeaders, setEventHeaders] = useState([]);
-  const [currentEventView, setCurrentEventView] = useState(eventHeaders.length > 0 ? eventHeaders[0].id : null);
-
+  const [currentEventView, setCurrentEventView] = useState(null)
+  
   const handleTabClick = (tabIndex) => {
     setActiveTab(tabIndex);
   };
@@ -17,6 +17,12 @@ function DashboardPage() {
   };
 
   const { user, capitalize, formatTime } = useContext(UserContext); 
+
+  useEffect(() => {
+  if (eventHeaders.length > 0) {
+    setCurrentEventView(eventHeaders[0].id);
+    }
+  }, [eventHeaders]);
 
   return (
     <section className="flex flex-col items-center justify-center min-h-screen bg-white mt-10 mb-28">

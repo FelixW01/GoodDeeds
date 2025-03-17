@@ -80,7 +80,7 @@ const aggregateHoursByMonth = (events) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [volunteerHours, setVolunteerHours] = useState(0);
   const [currentEvents, setCurrentEvents] = useState([]);
-  const [activeTab, setActiveTab] = useState(1);
+  const [activeTab, setActiveTab] = useState(2);
 
   const handleTabClick = (tabIndex) => {
     setActiveTab(tabIndex);
@@ -218,12 +218,12 @@ const aggregateHoursByMonth = (events) => {
                 <div role="tablist" className="tabs tabs-border">
                     {user.role === "organization" ? 
                     <>
-                    <a role="tab" className={`tab ${activeTab === 1 ? "tab-active !bg-transparent" : ""}`} onClick={() => handleTabClick(1)}>
-                        Upcoming Events
-                    </a>
                     <a role="tab" className={`tab ${activeTab === 2 ? "tab-active !bg-transparent" : ""}`} onClick={() => handleTabClick(2)}>
                         Current Events
                     </a> </>: <h2 className="card-title">Upcoming Events</h2>}
+                    <a role="tab" className={`tab ${activeTab === 1 ? "tab-active !bg-transparent" : ""}`} onClick={() => handleTabClick(1)}>
+                        Upcoming Events
+                    </a>
                 </div>
                 <div className='h-full overflow-y-hidden'>
                   <div className="overflow-x-auto h-full overflow-y-auto max-h-[400px]">
