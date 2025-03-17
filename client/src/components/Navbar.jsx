@@ -23,6 +23,7 @@ function Navbar() {
       console.error('Error logging out:', err);
     }
   }
+
   return (
     <>
       <div className="navbar shadow-sm lg:hidden bg-[#664395] text-white">
@@ -104,7 +105,8 @@ function Navbar() {
                 <div className="dropdown dropdown-end">
                     <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
                         <div className="w-10 rounded-full flex-col content-center">
-                          <i className="fa-solid fa-user"></i>
+                          
+                          {user.profile_picture !== null ? <img src={user.profile_picture}/> : <i className="fa-solid fa-user"></i>}
                         </div>
                     </div>
                     <ul
