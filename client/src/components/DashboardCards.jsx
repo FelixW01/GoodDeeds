@@ -18,7 +18,7 @@ function DashboardCards({user, formatTime, currentEventView, setEventHeaders}) {
   });
 };
 
-// Gather all the hours worked by month
+// Gather all the hours worked and volunteers for the last 6 months, this is used to populate the chart
 const aggregateHoursByMonth = (events) => {
   const currentMonth = new Date().getMonth();
   // This creates an array with 6 empty slots and fills it with 0 as the starting point
@@ -65,15 +65,20 @@ const aggregateHoursByMonth = (events) => {
   };
 
  const options = {
-    responsive: true,
-    scales: {
-          y: {
-              type: 'linear',
-              position: 'left',
-              beginAtZero: true,
-          }
+  responsive: true,
+  scales: {
+    y: {
+      type: 'linear',
+      position: 'left',
+      beginAtZero: true,
+      ticks: {
+        stepSize: 1,
+        precision: 0,
+        callback: (value) => Math.floor(value)
       }
-  };
+    }
+  }
+};
 
   let volunteerCounter = 1;
   
@@ -84,6 +89,7 @@ const aggregateHoursByMonth = (events) => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [volunteerHours, setVolunteerHours] = useState(0);
+  const [currentOrgEvents, setCurrentOrgEvents] = useState([]);
   const [currentEvents, setCurrentEvents] = useState([]);
   const [activeTab, setActiveTab] = useState(2);
 
@@ -155,6 +161,7 @@ const aggregateHoursByMonth = (events) => {
       }
   };
 
+  // Fetch upcoming events and filter them by upcoming and current events
   const getUpcomingEvents = async () => {
     try {
         const today = new Date();
@@ -163,30 +170,44 @@ const aggregateHoursByMonth = (events) => {
         twoWeeksFromNow.setDate(today.getDate() + 14);
 
         let filteredUpcomingEvents = [];
+        let filteredCurrentOrgEvents = [];
         let filteredCurrentEvents = [];
 
         if (user.role === 'organization') {
-            // Filter organization events if role is 'organization'
+            // Filter organization events by upcoming events
             filteredUpcomingEvents = organizationEvents.filter(event => {
                 const eventStartDate = new Date(event.start_date);
                 return eventStartDate >= today && eventStartDate <= twoWeeksFromNow;
             });
 
-            filteredCurrentEvents = organizationEvents.filter(event => {
+            // Filter user events by current events
+            filteredCurrentOrgEvents = organizationEvents.filter(event => {
                 const eventStartDate = new Date(event.start_date);
                 const eventEndDate = new Date(event.end_date);
+
+                // Check if today's date is within the event's date range
                 return eventStartDate <= today && eventEndDate >= today;
             });
 
             setUpcomingOrganizationEvents(filteredUpcomingEvents);
-            setCurrentEvents(filteredCurrentEvents);
+            setCurrentOrgEvents(filteredCurrentOrgEvents);
         } else {
-            // Filter user events if role is not 'organization'
+            // Filter user events by upcoming events
             filteredUpcomingEvents = userEvents.filter(event => {
                 const eventStartDate = new Date(event.start_date);
                 return eventStartDate >= today && eventStartDate <= twoWeeksFromNow;
             });
 
+            // Filter user events by current events
+            filteredCurrentEvents = userEvents.filter(event => {
+                const eventStartDate = new Date(event.start_date);
+                const eventEndDate = new Date(event.end_date);
+                
+                // Check if today's date is within the event's date range
+                return eventStartDate <= today && eventEndDate >= today;
+            });
+            
+            setCurrentEvents(filteredCurrentEvents);
             setUpcomingEvents(filteredUpcomingEvents);
         }
       } catch (error) {
@@ -204,6 +225,9 @@ const aggregateHoursByMonth = (events) => {
     } 
 }, [userEvents, organizationEvents]);
 
+  currentEvents ? console.log(currentEvents, '<< user events') : null
+  console.log(userEvents)
+  console.log(organizationEvents)
   return (
     <>
         <div className="flex flex-col lg:flex-row justify-center items-center my-10 gap-10 lg:h-80 xl:h-3/4"> 
@@ -220,7 +244,6 @@ const aggregateHoursByMonth = (events) => {
             <div className="card card-border flex-1 h-full w-full lg:max-w-[50%]"> 
               <div className="card-body bg-base-300 rounded-lg h-full bg-gradient-to-r from-[#F7F7F7] to-[#E5D8F5]">
                 <div role="tablist" className="tabs tabs-border">
-                    {user.role === "organization" ? 
                     <>
                       <a role="tab" className={`tab ${activeTab === 2 ? "tab-active !bg-transparent" : ""}`} onClick={() => handleTabClick(2)}>
                           Current Events
@@ -228,8 +251,7 @@ const aggregateHoursByMonth = (events) => {
                       <a role="tab" className={`tab ${activeTab === 1 ? "tab-active !bg-transparent" : ""}`} onClick={() => handleTabClick(1)}>
                           Upcoming Events
                       </a>
-                    </> : 
-                    <h2 className="card-title">Upcoming Events</h2>} 
+                    </>
                 </div>
                 <div className='h-full overflow-y-hidden'>
                   <div className="overflow-x-auto h-full overflow-y-auto max-h-[400px]">
@@ -261,13 +283,54 @@ const aggregateHoursByMonth = (events) => {
                               ))
                             ) : (
                               <tr>
-                                <td colSpan="4" className="text-center">
-                                  No upcoming organization events
-                                </td>
+                                <td colSpan="4" className="text-center">No upcoming organization events</td>
                               </tr>
                             )
                           ) : activeTab === 2 ? (
                             // Show Current Events when activeTab is 2
+                            currentOrgEvents.length > 0 ? (
+                              currentOrgEvents.map((event, index) => (
+                                <tr
+                                  className="hover:bg-gradient-to-r from-[#E0E0E0] to-[#D1B8F1] rounded-xl hover:shadow-lg"
+                                  key={index}
+                                >
+                                  <td>{event.title}</td>
+                                  <td>{event.location}</td>
+                                  <td>{new Date(event.start_date).toLocaleDateString()}</td>
+                                  <td>{formatTime(event.start_time)}</td>
+                                </tr>
+                              ))
+                            ) : (
+                              <tr>
+                                <td colSpan="4" className="text-center">No current organization events</td>
+                              </tr>
+                            )
+                          ) : (
+                            <tr>
+                              <td colSpan="4" className="text-center">Select a tab</td>
+                            </tr>
+                          )
+                        ) : (
+                          // User role logic (same as organization but with user-specific states)
+                          activeTab === 1 ? (
+                            upcomingEvents.length > 0 ? (
+                              upcomingEvents.map((event, index) => (
+                                <tr
+                                  className="hover:bg-gradient-to-r from-[#E0E0E0] to-[#D1B8F1] rounded-xl hover:shadow-lg"
+                                  key={index}
+                                >
+                                  <td>{event.title}</td>
+                                  <td>{event.location}</td>
+                                  <td>{new Date(event.start_date).toLocaleDateString()}</td>
+                                  <td>{formatTime(event.start_time)}</td>
+                                </tr>
+                              ))
+                            ) : (
+                              <tr>
+                                <td colSpan="4" className="text-center">No upcoming events</td>
+                              </tr>
+                            )
+                          ) : activeTab === 2 ? (
                             currentEvents.length > 0 ? (
                               currentEvents.map((event, index) => (
                                 <tr
@@ -282,34 +345,15 @@ const aggregateHoursByMonth = (events) => {
                               ))
                             ) : (
                               <tr>
-                                <td colSpan="4" className="text-center">
-                                  No current organization events
-                                </td>
+                                <td colSpan="4" className="text-center">No current events</td>
                               </tr>
                             )
                           ) : (
-                            // Fallback for if neither tab is selected
                             <tr>
-                              <td colSpan="4" className="text-center">
-                                Select a tab
-                              </td>
+                              <td colSpan="4" className="text-center">Select a tab</td>
                             </tr>
                           )
-                        ) : (upcomingEvents.length > 0 ? upcomingEvents.map((event, index) => {
-                              return (
-                                <tr className="hover:bg-gradient-to-r from-[#E0E0E0] to-[#D1B8F1] rounded-xl hover:shadow-lg" key={index}>
-                                  <td>{event.title}</td>
-                                  <td>{event.location}</td>
-                                  <td>{new Date(event.start_date).toLocaleDateString()}</td>
-                                  <td>{formatTime(event.start_time)}</td>
-                                </tr>
-                              );
-                            }) : 
-                            <tr>
-                              <td colSpan="4" className="text-center">No upcoming events</td>
-                            </tr>
-                          )
-                        }     
+                        )}
                       </tbody>
                     </table>
                   </div>

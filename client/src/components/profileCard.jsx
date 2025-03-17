@@ -144,8 +144,7 @@ const ProfilePage = () => {
       };
     }, [selectedFile]);
 
-  console.log( isLoading, "<<< loading ?");
-  console.log(user, '<<< user');
+
   return (
     <>
     {!isLoading && user ? 
