@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-const dualInfoCard = () => {
+const DualInfoCard = () => {
     return (
         <>
             <div className='flex flex-col xl:flex-row justify-center h-fit'>
@@ -67,4 +67,4 @@ const dualInfoCard = () => {
     )
 }
 
-export default dualInfoCard;
+export default DualInfoCard;
