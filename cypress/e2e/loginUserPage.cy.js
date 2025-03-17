@@ -1,7 +1,12 @@
 describe('LoginPage Tests', () => {
+    const user = {
+        email: Cypress.env('userEmail'), // Use environment variable for user email
+        password: Cypress.env('userPass'), // Use environment variable for user password
+    };
+
     beforeEach(() => {
         // Visit the login page before each test
-        cy.visit('http://localhost:5173/login');
+        cy.visit('/login'); // Use baseUrl from Cypress config
     });
 
     it('Renders the LoginPage correctly', () => {
@@ -55,14 +60,13 @@ describe('LoginPage Tests', () => {
         }).as('login');
 
         // Fill out the form with valid credentials
-        cy.get('input[name="email"]').type('llobster@gmail.com');
-        cy.get('input[name="password"]').type('LarryLobster123!');
+        cy.get('input[name="email"]').type(user.email);
+        cy.get('input[name="password"]').type(user.password);
 
         // Submit the form by targeting the specific button
         cy.get('button.bg-\\[\\#7539C2\\]').contains('Login').click(); // Specific button
 
         // Check if the user is redirected to the dashboard
         cy.url().should('include', '/dashboard');
-
     });
 });

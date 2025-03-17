@@ -1,7 +1,7 @@
 describe('SignUpOrgCard Tests', () => {
     beforeEach(() => {
         // Visit the organization signup page before each test
-        cy.visit('http://localhost:5173/signuporg');
+        cy.visit('/signuporg');
     });
 
     it('Renders the SignUpOrgCard correctly', () => {
