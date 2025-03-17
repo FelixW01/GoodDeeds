@@ -73,6 +73,7 @@ const getUserEventsByUserId = async (req, res) => {
                 e.description, 
                 e.location, 
                 e.start_date, 
+                e.end_date,
                 e.start_time, 
                 o.contact_email 
             FROM user_events ue

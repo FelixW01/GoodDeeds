@@ -1,4 +1,4 @@
-import ProfileCard from "../components/profileCard"
+import ProfileCard from "../components/ProfileCard"
 
 function ProfilePage() {
 
