@@ -124,7 +124,7 @@ const aggregateHoursByMonth = (events) => {
                   id: event.event_id,
               };
           });
-          console.log(response.data, '<< organization events')
+
           setOrganizationEvents(response.data);
           setEventHeaders(eventHeaders);
 

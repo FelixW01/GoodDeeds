@@ -52,7 +52,6 @@ function DashboardPage() {
             {user.role === 'organization' ? (
               <div className="flex flex-col items-center justify-center lg:items-start mt-10 lg:justify-start">
                 {activeTab === 1 ? (
-                  eventHeaders.length > 4 ? (
                     <select defaultValue="Pick an event" className="select" onChange={(e) => handleIconClick(e.target.value)}>
                       {eventHeaders.map((event) => (
                         <option key={event.id} value={event.id}>
@@ -60,24 +59,6 @@ function DashboardPage() {
                         </option>
                       ))}
                     </select>
-                  ) : (
-                    eventHeaders.map((event) => {
-                      const isActive = currentEventView === event.id;
-
-                      return (
-                        <div
-                          key={event.id}
-                          className={`flex items-center justify-center w-[70px] h-[60px] sm:w-[110px] sm:h-[100px] lg:w-[150px] lg:h-[140px]
-                            transition-transform duration-100 ease-in-out bg-blue-300 text-center text-black rounded-xl
-                            ${isActive ? 'scale-110 shadow-xl border-2 border-blue-200' : 'hover:scale-105 hover:shadow-lg opacity-80'} 
-                            cursor-pointer`}
-                          onClick={() => handleIconClick(event.id)}
-                        >
-                          {event.title}
-                        </div>
-                      );
-                    })
-                  )
                 ) : null}
               </div>
             ) : (

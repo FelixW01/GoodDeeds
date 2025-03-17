@@ -12,7 +12,8 @@ const ProfilePage = () => {
   const fileInputRef = useRef(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [organizationEvents, setOrganizationEvents] = useState([]);
-  
+  const [organizationInfo, setOrganizationInfo] = useState(null);
+
   // Form state for editing mode
   const [formData, setFormData] = useState({
     first_name: '',
@@ -30,7 +31,12 @@ const ProfilePage = () => {
       email: user.email || '',
       profile_picture: user.profile_picture || '',
     });
-     getOrganization();
+
+    if (user && user.role === 'organization') {
+      getOrganization();
+      getOrganizationinfo();
+    }
+
      setIsLoading(false);
     }
   }, [user]);
@@ -72,51 +78,47 @@ const ProfilePage = () => {
   };
 
   const saveProfileChanges = async () => {
-    setSaveStatus('saving');
-    try {
-      // Create a FormData object to handle file upload
-      const submitData = new FormData();
-      
-      // Add user fields to the form data
-      submitData.append('first_name', formData.first_name);
-      submitData.append('last_name', formData.last_name);
-      submitData.append('email', formData.email);
-      
-      // Only append the file if a new one was selected
-      if (selectedFile) {
-        submitData.append('profile_picture', selectedFile);
-      }
-      
-      // Submit to API
-      const response = await fetch('/api/user/update', {
-        method: 'PUT',
-        body: submitData,
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to update profile');
-      }
-      
-      const result = await response.json();
-      console.log('Profile updated:', result);
+  setSaveStatus('saving');
+  try {
+    const submitData = new FormData();
 
-      if (result) {
-        setUser({
-            ...formData,
-            total_hours_worked: Number(user?.total_hours_worked) || 0, 
-            total_events_attended: Number(user?.total_events_attended) || 0
-        });
-        }
-     
-      setSaveStatus('success');
-      // Exit edit mode after successful save
-      setIsEditing(false);
-    } catch (err) {
-      console.error('Error updating profile:', err);
-      setError('Failed to update profile. Please try again.');
-      setSaveStatus('error');
+    submitData.append('first_name', formData.first_name);
+    submitData.append('last_name', formData.last_name);
+    submitData.append('email', formData.email);
+    if (selectedFile) {
+      submitData.append('profile_picture', selectedFile);
     }
-  };
+
+    const response = await fetch('/api/user/update', {
+      method: 'PUT',
+      body: submitData,
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to update profile');
+    }
+
+    const result = await response.json();
+    console.log('Profile updated:', result);
+
+    setUser({
+      ...user,
+      first_name: formData.first_name,
+      last_name: formData.last_name,
+      email: formData.email,
+      profile_picture: formData.profile_picture || user.profile_picture,
+      total_hours_worked: user?.total_hours_worked || 0,
+      total_events_attended: user?.total_events_attended || 0,
+    });
+
+    setSaveStatus('success');
+    setIsEditing(false);
+  } catch (err) {
+    console.error('Error updating profile:', err);
+    setError('Failed to update profile. Please try again.');
+    setSaveStatus('error');
+  }
+};
 
   const toggleEditMode = () => {
     if (isEditing) {
@@ -141,8 +143,17 @@ const ProfilePage = () => {
       try {
           const response = await axios.get('/api/events/org/get');
 
-          console.log(response.data, '<< organization events')
           setOrganizationEvents(response.data);
+      } catch (error) {
+          console.error('Error fetching user events:', error);
+      }
+  };
+
+  const getOrganizationinfo = async () => {
+      try {
+          const response = await axios.get('/api/organizations/get');
+
+          setOrganizationInfo(response.data);
       } catch (error) {
           console.error('Error fetching user events:', error);
       }
@@ -156,8 +167,6 @@ const ProfilePage = () => {
         }
       };
     }, [selectedFile]);
-
-    organizationEvents ? console.log(organizationEvents) : console.log('no organization events')
 
   return (
     <>
@@ -257,7 +266,9 @@ const ProfilePage = () => {
                   <h2 className="text-xl font-bold mt-2">{capitalize(user.first_name)} {capitalize(user.last_name)}</h2>
                   <div className="flex items-center mt-1">
                     <i className="fa-solid fa-star mr-1"></i>
-                    <span className="text-sm opacity-70">{parseInt(user.total_hours_worked)} hours of Good Deeds!</span>
+                    { organizationInfo ? 
+                    <span className="text-sm opacity-70">{organizationInfo.name}</span>
+                    : <span className="text-sm opacity-70">{parseInt(user.total_hours_worked)} hours of Good Deeds!</span>}
                   </div>
                 </>
               )}
@@ -268,14 +279,22 @@ const ProfilePage = () => {
           <div className="lg:col-span-2">
             <div className="card bg-base-100 shadow-xl mb-6">
               <div className="card-body">
-                <h2 className="card-title text-xl">Contact Information</h2>
+                <h2 className="card-title text-xl">{!organizationInfo ? 'Email' : 'Contact Information'}</h2>
                   <div className="space-y-2">
+                    {!organizationInfo ? 
                     <div className="flex items-center">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                       </svg>
                       <span>{user.email}</span>
                     </div>
+                    :
+                    <div className="flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                      </svg>
+                      <span>{organizationInfo.contact_email}</span>
+                    </div>}
                   </div>
               </div>
             </div>
@@ -289,7 +308,7 @@ const ProfilePage = () => {
                     <div className="stat-figure text-primary">
                       <i className="fa-solid fa-clock text-2xl"></i>
                     </div>
-                    {user.role === "organization" ? 
+                    {organizationInfo ? 
                       <>
                         <div className="stat-title">Events Hosted</div>
                         <div className="stat-value text-primary">{organizationEvents?.length || 0}</div>
@@ -317,7 +336,7 @@ const ProfilePage = () => {
       </div>
     </div> : 
     <div className="min-h-screen flex justify-center items-center">
-      <div className="loading loading-spinner loading-lg text-primary"></div>
+    <div className="loading loading-spinner loading-lg text-primary"></div>
     </div>}
     </>
   );
