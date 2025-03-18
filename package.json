@@ -1,5 +1,5 @@
 {
-  "name": "dysonai",
+  "name": "gooddeeds",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -10,6 +10,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "cd server && node server.js",
+    "heroku-postbuild": "npm install --prefix client && npm run build --prefix client && npm install --prefix server",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "server": "cd server && nodemon server.js",
     "client": "cd client && npm run dev",
@@ -21,7 +22,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/FelixW01/DysonAI.git"
+    "url": "git+https://github.com/FelixW01/GoodDeeds.git"
   },
   "keywords": [],
   "author": "",
