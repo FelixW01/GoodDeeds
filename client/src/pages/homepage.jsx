@@ -11,7 +11,7 @@ function HomePage() {
     return (
         <>
             <Hero/>
-            <h1 className='font-bold text-3xl lg:text-5xl text-center mt-10'>Our Story</h1>
+            <h1 className='font-bold text-3xl lg:text-5xl text-center mt-10' id="our-story">Our Story</h1>
             <div className='flex justify-center mt-10'>
             <ImageCard/>
             </div>
@@ -22,11 +22,11 @@ function HomePage() {
                 <ImageCardReverse/>
             </div>
             <DualInfoCard/>
-            <div className='flex justify-center'>
+            <div className='flex justify-center' id="contact-form">
             <ContactForm/>
             </div>
             <h1 className='font-bold text-3xl lg:text-5xl text-center my-10'>Frequently Asked Questions</h1>
-            <div className='flex justify-center'>
+            <div className='flex justify-center' id="faq">
             <Accordion/>
             </div>
         </>
