@@ -5,19 +5,16 @@
 https://gooddeeds-49c2180d2770.herokuapp.com/
 
 ## Description
-Welcome to GoodDeeds, a platform dedicated to connecting passionate volunteers with organizations in need of volunteers. Whether you're looking to make a difference or seeking volunteers to drive your mission forward, GoodDeeds offers a seamless and intuitive experience to help you achieve your goals. GoodDeeds is built using the MERN stack (MongoDB, Express.js, React, Node.js) to create a dynamic and user-friendly platform.
+GoodDeeds is a platform dedicated to connecting passionate volunteers with organizations in need. Whether you're looking to make a difference or seeking volunteers to drive your mission forward, GoodDeeds offers a seamless and intuitive experience to help you achieve your goals.
+
+GoodDeeds is built using the MERN stack (MySQL, Express.js, React, Node.js) to create a dynamic and user-friendly platform. It leverages Vite for fast bundling, Tailwind and DaisyUI for modern styling, and the Cloudinary API to manage media efficiently.
 
 This project reflects a commitment to promoting community engagement and highlights best practices in modern web development.
 
 ## Table of Contents
-- [App Demo](#app-demo)
 - [Installation](#installation)
 - [Contributing](#contributing)
 - [Questions](#questions)
-
-## App Demo
-### Click for video demo
-
 
 ## Installation
 To run locally, follow these steps:
@@ -52,7 +49,7 @@ To run locally, follow these steps:
     ```
 
 ## Contributing
-Felix Willem
+Felix Willem, Sean Pichay
 
 ## Questions
-If you have any questions, please contact me via GitHub: [FelixW01](https://github.com/FelixW01) or Email: felixwillem01@yahoo.com.
+If you have any questions, please contact us via GitHub: [FelixW01](https://github.com/FelixW01), [Seanzinh0](https://github.com/seanzinh0) or Email: felixwillem01@yahoo.com, s.pichay03@gmail.com.
