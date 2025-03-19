@@ -41,18 +41,21 @@ describe('Navbar', () => {
     vi.clearAllMocks();
   });
 
+  // Test 1: see if the navbar is rendered correctly
   it('renders the navbar with GoodDeeds brand', () => {
     renderNavbar();
     const brandLinks = screen.getAllByText('GoodDeeds');
     expect(brandLinks.length).toBeGreaterThan(0);
   });
 
+  // Test 2: see if the navbar links are rendered correctly
   it('shows login and signup buttons when user is not logged in', () => {
     renderNavbar();
     expect(screen.getByText('Login')).toBeInTheDocument();
     expect(screen.getByText('Sign Up')).toBeInTheDocument();
   });
 
+  // Test 3: see if the default user icon is shown when profile picture is not available properly
   it('shows fallback user icon when profile picture is not available', () => {
     renderNavbar({ id: 1, name: 'Test User', profile_picture: null });
     
@@ -60,6 +63,7 @@ describe('Navbar', () => {
     expect(userIcons.length).toBeGreaterThan(0);
   });
 
+  // Test 4: see if the user icon is shown when profile picture is available
   it('updates isLoggedIn state when user context changes', async () => {
     const { rerender } = renderNavbar();
     

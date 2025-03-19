@@ -40,7 +40,8 @@ describe('SignUpCard', () => {
       </BrowserRouter>
     );
   };
-
+  
+  // Test 1: see if the signup form is rendered correctly
   it('renders the signup form correctly', () => {
     renderComponent();
     expect(screen.getByText(/Become a member today!/i)).toBeInTheDocument();
@@ -51,6 +52,7 @@ describe('SignUpCard', () => {
     expect(screen.getByRole('button', { name: /Sign Up/i })).toBeInTheDocument();
   });
 
+  // Test 2: see if the form data state is updates properly
   it('updates form data state on input change', () => {
     renderComponent();
     
@@ -70,6 +72,7 @@ describe('SignUpCard', () => {
     expect(passwordInput.value).toBe('Password123');
   });
 
+  // Test 3: see if the user is created successfully
   it('successfully creates a user and navigates to login page', async () => {
     axios.post.mockResolvedValueOnce({ data: { id: 1, email: 'john.doe@example.com' } });
     
@@ -100,6 +103,7 @@ describe('SignUpCard', () => {
     });
   });
 
+  // Test 4: see if an error message is displayed when the API request fails
   it('displays an error message when API request fails', async () => {
     const errorMessage = 'Email already exists';
     axios.post.mockRejectedValueOnce({ 
@@ -127,6 +131,7 @@ describe('SignUpCard', () => {
     });
   });
 
+  // Test 5: see if the sign in link and organization signup link are working
   it('navigates to login page when sign in link is clicked', () => {
     renderComponent();
     
@@ -134,6 +139,7 @@ describe('SignUpCard', () => {
     expect(signInLink.closest('a')).toHaveAttribute('href', '/login');
   });
 
+  // Test 6: see if the organization signup link is working
   it('navigates to organization signup page when "Click here!" is clicked', () => {
     renderComponent();
     

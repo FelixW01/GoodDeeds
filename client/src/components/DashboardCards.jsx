@@ -92,6 +92,7 @@ const aggregateHoursByMonth = (events) => {
   const [currentOrgEvents, setCurrentOrgEvents] = useState([]);
   const [currentEvents, setCurrentEvents] = useState([]);
   const [activeTab, setActiveTab] = useState(2);
+  
 
   const handleTabClick = (tabIndex) => {
     setActiveTab(tabIndex);
@@ -415,7 +416,13 @@ const aggregateHoursByMonth = (events) => {
                                   <td>{new Date(event.start_date).toLocaleDateString()}</td>
                                   <td>
                                     {new Date(event.start_date) > new Date() ? (
-                                      <div className="tooltip tooltip-left" data-tip="Available after event date">
+                                      <div className="tooltip tooltip-left" data-tip={`Available after ${new Date(event.start_date).toLocaleDateString()}`}>
+                                        <button className="btn btn-disabled">
+                                          Log Hours
+                                        </button>
+                                      </div>
+                                    ) : new Date(event.end_date) < new Date() ? (
+                                      <div className="tooltip tooltip-left" data-tip="Event has ended">
                                         <button className="btn btn-disabled">
                                           Log Hours
                                         </button>
