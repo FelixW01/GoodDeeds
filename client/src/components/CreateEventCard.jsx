@@ -270,7 +270,7 @@ const CreateEventCard = ({setActiveTab}) => {
                         value={formData.requirements}
                         onChange={handleChange}
                       />
-                      <button className="btn bg-[#7539C2] text-white mt-4">Sign Up</button>
+                      <button className="btn bg-[#7539C2] text-white mt-4">Create Event</button>
                 </fieldset>
               </form>
           </div>
