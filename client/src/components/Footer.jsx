@@ -1,14 +1,15 @@
 import { Link } from 'react-router-dom';
+import { HashLink } from 'react-router-hash-link';
 
 function Footer() {
 
   return (
     <footer className="footer footer-horizontal footer-center text-base-content rounded-t p-10 bg-[#5715AE]">
       <nav className="grid grid-flow-col gap-4 text-white">
-        <Link to="/" className="link link-hover">About us</Link>
-        <Link to="/" className="link link-hover">Contact</Link>
+        <HashLink to="/#our-story" className="link link-hover" smooth>About us</HashLink>
+        <HashLink to="/#contact-form" className="link link-hover" smooth>Contact</HashLink>
         <Link to="/listing" className="link link-hover">Events</Link>
-        <Link to="/" className="link link-hover">FAQ</Link>
+        <HashLink to="/#faq" className="link link-hover" smooth>FAQ</HashLink>
       </nav>
       <nav>
         <div className="grid grid-flow-col gap-4 text-white">

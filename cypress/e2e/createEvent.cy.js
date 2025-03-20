@@ -40,7 +40,7 @@ describe('Create Event', () => {
         cy.get('input[name="requirements"]').type('Must be 18+ years old.');
 
         // Submit the form
-        cy.get('button.bg-\\[\\#7539C2\\]').contains('Sign Up').click();
+        cy.get('button.bg-\\[\\#7539C2\\]').contains('Create Event').click();
 
         // Wait for the event creation API call to complete
         cy.wait('@createEvent');

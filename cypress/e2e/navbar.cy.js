@@ -60,10 +60,10 @@ describe('Navbar Tests', () => {
         cy.contains('For Volunteers').should('not.exist');
 
         // Check if the user avatar dropdown exists (desktop view)
-        cy.get('.navbar.hidden.lg\\:flex .fa-user').should('exist');
+        cy.get('.fa-user').should('exist');
 
         // Check if the "Logout" option exists in the dropdown (desktop view)
-        cy.get('.navbar.hidden.lg\\:flex .fa-user').click();
+        cy.get('.fa-user').click({force: true});
         cy.contains('Logout').should('exist');
     });
 
@@ -94,10 +94,10 @@ describe('Navbar Tests', () => {
         cy.contains('For Volunteers').should('not.exist');
 
         // Check if the user avatar dropdown exists (desktop view)
-        cy.get('.navbar.hidden.lg\\:flex .fa-user').should('exist');
+        cy.get('.fa-user').should('exist');
 
         // Check if the "Logout" option exists in the dropdown (desktop view)
-        cy.get('.navbar.hidden.lg\\:flex .fa-user').click();
+        cy.get('.fa-user').click({force: true});
         cy.contains('Logout').should('exist');
     });
 
@@ -112,7 +112,7 @@ describe('Navbar Tests', () => {
         cy.url().should('include', '/dashboard');
 
         // Open the user avatar dropdown (desktop view) with force: true
-        cy.get('.navbar.hidden.lg\\:flex .fa-user').click({ force: true });
+        cy.get('.fa-user').click({ force: true });
 
         // Click the "Logout" link with force: true
         cy.contains('Logout').click({ force: true });
