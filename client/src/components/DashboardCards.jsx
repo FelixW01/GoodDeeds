@@ -365,7 +365,7 @@ const aggregateHoursByMonth = (events) => {
           {/* Volunteer table */}
           <div className="card card-border h-full w-full ">
               <div className="card-body bg-base-300 rounded-lg bg-gradient-to-r from-[#F7F7F7] to-[#E5D8F5]">
-                {user.role === 'organization' ? <h2 className="card-title">Volunteers Information</h2> : <h2 className="card-title">Event Infornation</h2>}
+                {user.role === 'organization' ? <h2 className="card-title">Volunteers Information</h2> : <h2 className="card-title">Event Information</h2>}
                 <div className="my-10 bg-base-300 bg-gradient-to-r from-[#F7F7F7] to-[#E5D8F5]">
                     <div className="overflow-x-auto overflow-y-auto">
                       <table className="table table-xs">
