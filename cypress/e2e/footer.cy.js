@@ -9,14 +9,14 @@ describe('Footer Tests', () => {
         cy.get('footer').should('exist');
 
         // Check if the "About us" link exists and navigates to the correct route
-        cy.get('footer a[href="/"]').contains('About us').should('exist');
-        cy.get('footer a[href="/"]').contains('About us').click();
-        cy.url().should('include', '/');
+        cy.get('footer a[href="/#our-story"]').contains('About us').should('exist');
+        cy.get('footer a[href="/#our-story"]').contains('About us').click();
+        cy.url().should('include', '/#our-story');
 
         // Check if the "Contact" link exists and navigates to the correct route
-        cy.get('footer a[href="/"]').contains('Contact').should('exist');
-        cy.get('footer a[href="/"]').contains('Contact').click();
-        cy.url().should('include', '/');
+        cy.get('footer a[href="/#contact-form"]').contains('Contact').should('exist');
+        cy.get('footer a[href="/#contact-form"]').contains('Contact').click();
+        cy.url().should('include', '/#contact-form');
 
         // Check if the "Events" link exists and navigates to the correct route
         cy.get('footer a[href="/listing"]').contains('Events').should('exist');
@@ -24,9 +24,9 @@ describe('Footer Tests', () => {
         cy.url().should('include', '/listing');
 
         // Check if the "FAQ" link exists and navigates to the correct route
-        cy.get('footer a[href="/"]').contains('FAQ').should('exist');
-        cy.get('footer a[href="/"]').contains('FAQ').click();
-        cy.url().should('include', '/');
+        cy.get('footer a[href="/#faq"]').contains('FAQ').should('exist');
+        cy.get('footer a[href="/#faq"]').contains('FAQ').click();
+        cy.url().should('include', '/#faq');
 
         // Check if the social media icons exist and have the correct attributes
         const socialIcons = [
